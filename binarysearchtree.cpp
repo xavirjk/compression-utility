@@ -42,7 +42,9 @@ bool BinarySearchTree<Comparable>::findSymbol(char ch) const
 {
     if (!root)
         return false;
-    if (hasSymbol(root->left, ch))
+    if (hasSymbol(root, ch))
+        return true;
+    else if (hasSymbol(root->left, ch))
         return true;
     return hasSymbol(root->right, ch);
 }
@@ -210,7 +212,6 @@ void BinarySearchTree<Comparable>::printTree() const
     cout << root->element.symbol << ":" << root->element.frequency << " ";
     preOrder(root->left);
     preOrder(root->right);
-    cout << endl;
 }
 
 template class BinarySearchTree<Fileinfo<int>>;
