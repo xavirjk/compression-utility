@@ -19,5 +19,20 @@ int main(int argc, char *argv[])
         ls->insert(bst, ls->zeroth());
     }
     ls->printList(*ls);
+    while (ls->size() > 1)
+    {
+        BinarySearchTree<Fileinfo<int>> *nT = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
+        ListItr<BinarySearchTree<Fileinfo<int>>> min = ls->findMin();
+        ls->remove(min.retrieve());
+        ListItr<BinarySearchTree<Fileinfo<int>>> min2 = ls->findMin();
+        ls->remove(min2.retrieve());
+        int f = min.retrieve()->getFrequency(min.retrieve()) + min2.retrieve()->getFrequency(min2.retrieve());
+        nT->insert(Fileinfo<int>(ch, f));
+        nT->insertLeft(min.retrieve());
+        nT->insertRight(min2.retrieve());
+        ls->insert(nT, ls->last());
+        //use depth to get left or right element.left should be deeper than right
+        break;
+    }
     return 0;
 }

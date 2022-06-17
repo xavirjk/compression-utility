@@ -19,7 +19,10 @@ public:
 
     void makeEmpty();
     void insert(const Fileinfo<int> &f);
+    void insertLeft(const BinarySearchTree *rhs);
+    void insertRight(const BinarySearchTree *rhs);
     void remove(const Fileinfo<int> &f);
+    int getFrequency(const BinarySearchTree *rhs) const;
 
     const BinarySearchTree &operator=(const BinarySearchTree &rhs);
 
@@ -29,6 +32,8 @@ private:
 
     const Comparable &elementAt(BinaryNode<Comparable> *t) const;
     void insert(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const;
+    void insertLeft(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const;
+    void insertRight(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const;
     void remove(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const;
     BinaryNode<Comparable> *findMin(BinaryNode<Comparable> *t) const;
     BinaryNode<Comparable> *findMax(BinaryNode<Comparable> *t) const;

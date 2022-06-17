@@ -45,6 +45,19 @@ ListItr<Object> List<Object>::first() const
     return ListItr<Object>(header->next);
 }
 template <class Object>
+ListItr<Object> List<Object>::findMin() const
+{
+    ListNode<Object> *itr = header->next;
+    ListNode<Object> *min = itr;
+    while (itr != nullptr && itr->element->getFrequency(itr->element) < min->element->getFrequency(min->element))
+    {
+        min = itr;
+        itr = itr->next;
+    }
+    return ListItr<Object>(min);
+}
+
+template <class Object>
 ListItr<Object> List<Object>::last() const
 {
     if (isEmpty())

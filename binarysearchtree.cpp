@@ -146,6 +146,30 @@ void BinarySearchTree<Comparable>::insert(const Fileinfo<int> &f)
 }
 
 template <class Comparable>
+void BinarySearchTree<Comparable>::insertLeft(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
+{
+    insert(f, t->left);
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::insertLeft(const BinarySearchTree *rhs)
+{
+    insertLeft(rhs->root->element, root);
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::insertRight(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
+{
+    insert(f, t->right);
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::insertRight(const BinarySearchTree *rhs)
+{
+    insertRight(rhs->root->element, root);
+}
+
+template <class Comparable>
 void BinarySearchTree<Comparable>::remove(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
 {
     if (t == nullptr)
@@ -212,6 +236,12 @@ void BinarySearchTree<Comparable>::printTree() const
     cout << root->element.symbol << ":" << root->element.frequency << " ";
     preOrder(root->left);
     preOrder(root->right);
+}
+
+template <class Comparable>
+int BinarySearchTree<Comparable>::getFrequency(const BinarySearchTree *rhs) const
+{
+    return rhs->root->element.frequency;
 }
 
 template class BinarySearchTree<Fileinfo<int>>;

@@ -18,6 +18,7 @@ public:
     void insert(Object *x, const ListItr<Object> &p);
     ListItr<Object> find(Object *x) const;
     ListItr<Object> findPrevious(Object *x) const;
+    ListItr<Object> findMin() const;
     bool findSymbol(const char &ch) const;
     void remove(Object *x);
     void printList(const List<Object> &theList);
