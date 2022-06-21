@@ -125,6 +125,27 @@ bool BinarySearchTree<Comparable>::isEmpty() const
 {
     return root == nullptr;
 }
+template <class Comparable>
+int BinarySearchTree<Comparable>::depth()
+{
+    total = 0;
+    depth(root->left);
+    depth(root->right);
+    return total;
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::depth(BinaryNode<Comparable> *t)
+{
+    if (t == nullptr)
+        return;
+    else
+    {
+        total += 1;
+        depth(t->left);
+        depth(t->right);
+    }
+}
 
 template <class Comparable>
 void BinarySearchTree<Comparable>::insert(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
@@ -146,27 +167,15 @@ void BinarySearchTree<Comparable>::insert(const Fileinfo<int> &f)
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::insertLeft(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
-{
-    insert(f, t->left);
-}
-
-template <class Comparable>
 void BinarySearchTree<Comparable>::insertLeft(const BinarySearchTree *rhs)
 {
-    insertLeft(rhs->root->element, root);
-}
-
-template <class Comparable>
-void BinarySearchTree<Comparable>::insertRight(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
-{
-    insert(f, t->right);
+    root->left = rhs->root;
 }
 
 template <class Comparable>
 void BinarySearchTree<Comparable>::insertRight(const BinarySearchTree *rhs)
 {
-    insertRight(rhs->root->element, root);
+    root->right = rhs->root;
 }
 
 template <class Comparable>
@@ -242,6 +251,18 @@ template <class Comparable>
 int BinarySearchTree<Comparable>::getFrequency(const BinarySearchTree *rhs) const
 {
     return rhs->root->element.frequency;
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::flag()
+{
+    this->root->element.flag = true;
+}
+
+template <class Comparable>
+bool BinarySearchTree<Comparable>::flagged() const
+{
+    return this->root->element.flag;
 }
 
 template class BinarySearchTree<Fileinfo<int>>;

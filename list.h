@@ -21,6 +21,7 @@ public:
     ListItr<Object> findMin() const;
     bool findSymbol(const char &ch) const;
     void remove(Object *x);
+    void remove(const ListItr<Object> &p);
     void printList(const List<Object> &theList);
     void makeEmpty();
 

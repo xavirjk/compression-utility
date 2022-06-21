@@ -25,5 +25,6 @@ public:
 
     Object frequency;
     const char symbol;
+    bool flag = false;
 };
 #endif //FILEINFO_H_

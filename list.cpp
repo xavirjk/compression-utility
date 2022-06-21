@@ -48,12 +48,18 @@ template <class Object>
 ListItr<Object> List<Object>::findMin() const
 {
     ListNode<Object> *itr = header->next;
-    ListNode<Object> *min = itr;
-    while (itr != nullptr && itr->element->getFrequency(itr->element) < min->element->getFrequency(min->element))
-    {
+    ListNode<Object> *min;
+    if (itr->element->flagged())
+        min = itr->next;
+    else
         min = itr;
+    while (itr != nullptr)
+    {
+        if (!itr->element->flagged() && itr->element->getFrequency(itr->element) < min->element->getFrequency(min->element))
+            min = itr;
         itr = itr->next;
     }
+    min->element->flag();
     return ListItr<Object>(min);
 }
 
@@ -113,6 +119,18 @@ void List<Object>::remove(Object *x)
         delete oldNode;
     }
 }
+template <class Object>
+void List<Object>::remove(const ListItr<Object> &p)
+{
+    ListItr<Object> pr = p.current->previous;
+    if (pr.current->next != nullptr)
+    {
+        ListNode<Object> *oldNode = pr.current->next;
+        pr.current->next = pr.current->next->next;
+        pr.current->next->previous = pr.current;
+        delete oldNode;
+    }
+}
 
 template <class Object>
 ListItr<Object> List<Object>::findPrevious(Object *x) const
@@ -127,7 +145,7 @@ template <class Object>
 void List<Object>::insert(Object *x, const ListItr<Object> &p)
 {
     if (p.current != nullptr)
-        p.current->next = new ListNode<Object>(x, p.current->next);
+        p.current->next = new ListNode<Object>(x, p.current->next, p.current);
 }
 
 template <class Object>
