@@ -1,4 +1,4 @@
-#include "huffmann.h"
+#include "huffman.h"
 Huffman::Huffman(){};
 Huffman::~Huffman(){};
 int Huffman::getFrequency() const { return 1; }

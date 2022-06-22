@@ -1,6 +1,6 @@
 #include "listitr.h"
 #include "binarysearchtree.h"
-#include "huffmann.h"
+#include "huffman.h"
 #include <iostream>
 using namespace std;
 #include <string>
