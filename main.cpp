@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
     string fl = "Hello World";
-    //string fl = "Smart star Asf. Just for the love of the Game. Smart Challenges coming soon for the better good";
+    //string fl = "Smart star Asf. Just for the love of the Game. Smart Challenges coming soon for the better good. Tear Mon";
     const char ch = 'T';
     int t = -1;
     List<BinarySearchTree<Fileinfo<int>>> *ls = new List<BinarySearchTree<Fileinfo<int>>>();
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         BinarySearchTree<Fileinfo<int>> *nT = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
         ListItr<BinarySearchTree<Fileinfo<int>>> min = ls->findMin();
         ListItr<BinarySearchTree<Fileinfo<int>>> min2 = ls->findMin();
-        int f = min.retrieve()->getFrequency(min.retrieve()) + min2.retrieve()->getFrequency(min2.retrieve());
+        int f = min.retrieve()->getFrequency() + min2.retrieve()->getFrequency();
         nT->insert(Fileinfo<int>(ch, f));
         if (min.retrieve()->depth() < min2.retrieve()->depth())
         {

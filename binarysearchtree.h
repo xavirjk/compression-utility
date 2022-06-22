@@ -1,9 +1,10 @@
 #include "binarynode.h"
 #include "fileinfo.h"
+#include "entity.h"
 #include <iostream>
 using namespace std;
 template <class Comparable>
-class BinarySearchTree
+class BinarySearchTree : public Entity
 {
 public:
     explicit BinarySearchTree(const Comparable &notFound);
@@ -13,7 +14,7 @@ public:
     const Comparable &findMin() const;
     const Comparable &findMax() const;
     const Comparable &find(const Fileinfo<int> &f) const;
-    bool findSymbol(char ch) const;
+    bool findSymbol(char ch) const override;
     bool isEmpty() const;
     void printTree() const;
 
@@ -23,9 +24,9 @@ public:
     void insertLeft(const BinarySearchTree *rhs);
     void insertRight(const BinarySearchTree *rhs);
     void remove(const Fileinfo<int> &f);
-    int getFrequency(const BinarySearchTree *rhs) const;
-    void flag();
-    bool flagged() const;
+    int getFrequency() const override;
+    void flag() override;
+    bool flagged() const override;
 
     const BinarySearchTree &operator=(const BinarySearchTree &rhs);
 

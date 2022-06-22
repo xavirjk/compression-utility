@@ -55,7 +55,7 @@ ListItr<Object> List<Object>::findMin() const
         min = itr;
     while (itr != nullptr)
     {
-        if (!itr->element->flagged() && itr->element->getFrequency(itr->element) < min->element->getFrequency(min->element))
+        if (!itr->element->flagged() && itr->element->getFrequency() < min->element->getFrequency())
             min = itr;
         itr = itr->next;
     }
@@ -176,3 +176,4 @@ List<Object>::~List()
     delete header;
 }
 template class List<BinarySearchTree<Fileinfo<int>>>;
+//template class List<Fileinfo<int>>;

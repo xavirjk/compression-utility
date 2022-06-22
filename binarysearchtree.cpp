@@ -248,9 +248,9 @@ void BinarySearchTree<Comparable>::printTree() const
 }
 
 template <class Comparable>
-int BinarySearchTree<Comparable>::getFrequency(const BinarySearchTree *rhs) const
+int BinarySearchTree<Comparable>::getFrequency() const
 {
-    return rhs->root->element.frequency;
+    return this->root->element.frequency;
 }
 
 template <class Comparable>
