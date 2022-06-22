@@ -238,7 +238,7 @@ void BinarySearchTree<Comparable>::preOrder(BinaryNode<Comparable> *t) const
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::printTree() const
+void BinarySearchTree<Comparable>::print() const
 {
     if (!root)
         return;

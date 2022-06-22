@@ -16,7 +16,7 @@ public:
     const Comparable &find(const Fileinfo<int> &f) const;
     bool findSymbol(char ch) const override;
     bool isEmpty() const;
-    void printTree() const;
+    void print() const override;
 
     void makeEmpty();
     void insert(const Fileinfo<int> &f);

@@ -157,7 +157,7 @@ void List<Object>::printList(const List<Object> &theList)
     {
         ListItr<Object> itr = theList.first();
         for (; !itr.isPastEnd(); itr.advance())
-            itr.retrieve()->printTree();
+            itr.retrieve()->print();
     }
     cout << endl;
 }
@@ -176,4 +176,4 @@ List<Object>::~List()
     delete header;
 }
 template class List<BinarySearchTree<Fileinfo<int>>>;
-//template class List<Fileinfo<int>>;
+template class List<Huffman>;

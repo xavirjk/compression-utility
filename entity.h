@@ -11,5 +11,6 @@ public:
     virtual int getFrequency() const = 0;
     virtual void flag() = 0;
     virtual bool findSymbol(char ch) const = 0;
+    virtual void print() const = 0;
 };
 #endif //ENTITY_H_
