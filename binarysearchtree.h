@@ -1,6 +1,6 @@
 #include "binarynode.h"
 #include "fileinfo.h"
-#include "entity.h"
+#include "huffman.h"
 #include <iostream>
 using namespace std;
 template <class Comparable>
@@ -17,6 +17,7 @@ public:
     bool findSymbol(char ch) const override;
     bool isEmpty() const;
     void print() const override;
+    Huffman *huffman(const int &size);
 
     void makeEmpty();
     void insert(const Fileinfo<int> &f);
@@ -33,9 +34,12 @@ public:
 private:
     BinaryNode<Comparable> *root;
     const Comparable ITEM_NOT_FOUND = -1;
-    int total = 0;
+    int count = 0;
+    string Scode = "";
+    Huffman *hf;
 
-    const Comparable &elementAt(BinaryNode<Comparable> *t) const;
+    const Comparable &
+    elementAt(BinaryNode<Comparable> *t) const;
     void insert(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const;
     void remove(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const;
     BinaryNode<Comparable> *findMin(BinaryNode<Comparable> *t) const;
@@ -46,4 +50,7 @@ private:
     void depth(BinaryNode<Comparable> *t);
     BinaryNode<Comparable> *clone(BinaryNode<Comparable> *t) const;
     bool hasSymbol(BinaryNode<Comparable> *t, char ch) const;
+    void recordWeights(BinaryNode<Comparable> *t);
+    void popBack();
+    void _switch();
 };

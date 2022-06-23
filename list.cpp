@@ -175,5 +175,6 @@ List<Object>::~List()
     makeEmpty();
     delete header;
 }
+
 template class List<BinarySearchTree<Fileinfo<int>>>;
 template class List<Huffman>;

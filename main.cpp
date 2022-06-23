@@ -2,12 +2,11 @@
 #include "list.h"
 int main(int argc, char *argv[])
 {
-    string fl = "Hello World";
-    //string fl = "Smart star Asf. Just for the love of the Game. Smart Challenges coming soon for the better good. Tear Mon";
+    //string fl = "Hello World";
+    string fl = "Smart star Asf. Just for the love of the Game. Smart Challenges coming soon for the better good.";
     const char ch = 'T';
     int t = -1;
     List<BinarySearchTree<Fileinfo<int>>> *ls = new List<BinarySearchTree<Fileinfo<int>>>();
-    BinarySearchTree<Fileinfo<int>> *pr = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
     for (const char s : fl)
     {
         BinarySearchTree<Fileinfo<int>> *bst = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
@@ -21,6 +20,7 @@ int main(int argc, char *argv[])
         ls->insert(bst, ls->last());
     }
     ls->printList(*ls);
+    const int size = ls->size();
     while (ls->size() > 1)
     {
         BinarySearchTree<Fileinfo<int>> *nT = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
@@ -44,5 +44,9 @@ int main(int argc, char *argv[])
     }
     cout << "done" << endl;
     ls->printList(*ls);
+    Huffman *hf = ls->last().retrieve()->huffman(size);
+    for (int i = 0; i < size; i++)
+        hf[i].print();
+    cout << "fin" << endl;
     return 0;
 }

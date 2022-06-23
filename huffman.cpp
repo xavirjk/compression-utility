@@ -1,8 +1,26 @@
 #include "huffman.h"
-Huffman::Huffman(){};
+Huffman::Huffman(const string &code, const char &symbol) : code(code), symbol(symbol){};
 Huffman::~Huffman(){};
+/*const &Huffman::operator=(const Huffman &rhs)
+{
+    if (this != &rhs)
+    {
+        makeEmpty();
+        root = clone(rhs.root);
+    }
+    return *this;
+}*/
 int Huffman::getFrequency() const { return 1; }
 bool Huffman::flagged() const { return false; }
 void Huffman::flag() {}
 bool Huffman::findSymbol(char ch) const { return false; }
-void Huffman::print() const {}
+void Huffman::print() const
+{
+    cout << symbol << " " << code << endl;
+}
+
+void Huffman::setData(const char &s, const string &c)
+{
+    symbol = s;
+    code = c;
+}

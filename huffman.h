@@ -3,11 +3,15 @@
 
 #include "string"
 #include "entity.h"
+#include <iostream>
+using namespace std;
 class Huffman : public Entity
 {
 public:
-    Huffman();
+    Huffman(const string &code = string(), const char &symbol = char());
     ~Huffman();
+
+    //const Huffman &operator=(const Huffman &rhs);
 
     int getFrequency() const override;
     void flag() override;
@@ -15,8 +19,10 @@ public:
     bool findSymbol(char ch) const override;
     void print() const override;
 
+    void setData(const char &s = char(), const string &c = string());
+
 private:
-    std::string code;
+    string code;
     char symbol;
 };
 

@@ -128,10 +128,10 @@ bool BinarySearchTree<Comparable>::isEmpty() const
 template <class Comparable>
 int BinarySearchTree<Comparable>::depth()
 {
-    total = 0;
+    count = 0;
     depth(root->left);
     depth(root->right);
-    return total;
+    return count;
 }
 
 template <class Comparable>
@@ -141,7 +141,7 @@ void BinarySearchTree<Comparable>::depth(BinaryNode<Comparable> *t)
         return;
     else
     {
-        total += 1;
+        count += 1;
         depth(t->left);
         depth(t->right);
     }
@@ -265,4 +265,50 @@ bool BinarySearchTree<Comparable>::flagged() const
     return this->root->element.flag;
 }
 
+template <class Comparable>
+Huffman *BinarySearchTree<Comparable>::huffman(const int &size)
+{
+    count = 0;
+    hf = new Huffman[size];
+    if (!root)
+        return hf;
+    Scode.append("0");
+    recordWeights(root->left);
+    _switch();
+    recordWeights(root->right);
+    return hf;
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
+{
+    if (!t->left && !t->right)
+    {
+        hf[count].setData(t->element.symbol, Scode);
+        count++;
+        return;
+    }
+    else
+    {
+        Scode.append("0");
+        recordWeights(t->left);
+        _switch();
+        recordWeights(t->right);
+        popBack();
+    }
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::popBack()
+{
+    if (Scode.length())
+        Scode.pop_back();
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::_switch()
+{
+    popBack();
+    Scode.append("1");
+}
 template class BinarySearchTree<Fileinfo<int>>;
