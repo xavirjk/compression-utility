@@ -11,13 +11,12 @@ public:
     Huffman(const string &code = string(), const char &symbol = char());
     ~Huffman();
 
-    //const Huffman &operator=(const Huffman &rhs);
-
     int getFrequency() const override;
     void flag() override;
     bool flagged() const override;
     bool findSymbol(char ch) const override;
     void print() const override;
+    string coded();
 
     void setData(const char &s = char(), const string &c = string());
 

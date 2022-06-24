@@ -28,6 +28,7 @@ public:
     int getFrequency() const override;
     void flag() override;
     bool flagged() const override;
+    string getTree();
 
     const BinarySearchTree &operator=(const BinarySearchTree &rhs);
 
@@ -53,4 +54,5 @@ private:
     void recordWeights(BinaryNode<Comparable> *t);
     void popBack();
     void _switch();
+    void appendToTree(BinaryNode<Comparable> *t);
 };

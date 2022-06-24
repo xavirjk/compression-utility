@@ -311,4 +311,29 @@ void BinarySearchTree<Comparable>::_switch()
     popBack();
     Scode.append("1");
 }
+template <class Comparable>
+string BinarySearchTree<Comparable>::getTree()
+{
+    Scode = "";
+    if (root)
+    {
+        Scode.append("0");
+        appendToTree(root->left);
+        appendToTree(root->right);
+    }
+    return Scode;
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::appendToTree(BinaryNode<Comparable> *t)
+{
+    if (!t->left && !t->right)
+    {
+        Scode.append("1" + string(1, t->element.symbol));
+        return;
+    }
+    Scode.append("0");
+    appendToTree(t->left);
+    appendToTree(t->right);
+}
 template class BinarySearchTree<Fileinfo<int>>;
