@@ -44,6 +44,7 @@ void CMPDCP::decompression()
 void CMPDCP::createHuffmanTree()
 {
     const int size = ls->size();
+    bits = "";
     while (ls->size() > 1)
     {
         BinarySearchTree<Fileinfo<int>> *nT = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
@@ -66,7 +67,6 @@ void CMPDCP::createHuffmanTree()
         ls->remove(min2);
     }
     Huffman *hf = ls->last().retrieve()->huffman(size);
-    string bits = "";
     for (int i = 0; i < size; i++)
         bits.append(hf[i].coded());
 }
