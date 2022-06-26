@@ -1,3 +1,6 @@
+#ifndef LISTITR_H_
+#define LISTITR_H_
+
 #include "listnode.h"
 template <class Object>
 class ListItr
@@ -26,3 +29,5 @@ private:
     ListItr(ListNode<Object> *theNode) : current(theNode){};
     friend class List<Object>;
 };
+
+#endif //LISTITR_H_

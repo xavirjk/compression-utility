@@ -1,3 +1,6 @@
+#ifndef LIST_H_
+#define LIST_H_
+
 #include "listitr.h"
 #include "binarysearchtree.h"
 #include "huffman.h"
@@ -31,3 +34,4 @@ public:
 private:
     ListNode<Object> *header;
 };
+#endif //LIST_H_

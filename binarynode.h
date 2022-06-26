@@ -1,3 +1,6 @@
+#ifndef BINARYNODE_H_
+#define BINARYNODE_H_
+
 template <class Comparable>
 class BinarySearchTree;
 
@@ -14,3 +17,4 @@ public:
 
     friend class BinarySearchTree<Comparable>;
 };
+#endif //BINARYNODE_H_

@@ -1,3 +1,6 @@
+#ifndef BINARYSEARCHTREE_H_
+#define BINARYSEARCHTREE_H_
+
 #include "binarynode.h"
 #include "fileinfo.h"
 #include "huffman.h"
@@ -56,3 +59,5 @@ private:
     void _switch();
     void appendToTree(BinaryNode<Comparable> *t);
 };
+
+#endif //BINARYSEARCHTREE_H_

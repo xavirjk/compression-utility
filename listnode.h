@@ -1,3 +1,6 @@
+#ifndef LISTNODE_H_
+#define LISTNODE_H_
+
 template <class Object>
 class List; //Incomplete declaration;
 
@@ -17,3 +20,5 @@ public:
     friend class List<Object>;
     friend class ListItr<Object>;
 };
+
+#endif //LISTNODE
