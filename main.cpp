@@ -1,6 +1,4 @@
 #include "cmpdcp.h"
-#include "bitset"
-
 int main(int argc, char *argv[])
 {
     string validity = argc > 1 ? argv[1] : "";

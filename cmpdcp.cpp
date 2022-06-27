@@ -22,23 +22,27 @@ void CMPDCP::compression()
         ls->insert(bst, ls->last());
     }
     createHuffmanTree();
-    int mod = bits.length() % 8;
-    if (mod)
-        for (int i = mod; i < 8; i++)
-            bits.append("0");
+    appendBits(bits);
     std::ostream &os = std::cout;
     toByte(ls->last().retrieve()->getTree(), bits);
-    bitset<8> bset(string("10110000"));
-    unsigned long i = bset.to_ulong();
-    unsigned char c = static_cast<unsigned char>(i);
-    cout << "ss " << c << endl;
-    std::bitset<8> b(c);
-    os << "b is " << b << endl;
-    cout << "fin" << endl;
+    cout << "**Completed**" << endl;
 }
 void CMPDCP::decompression()
 {
     cout << "initializing decompression" << endl;
+    string sc = readFile("E:\\qt-rec\\413_test\\output.txt");
+    //create huffman tree using header infor
+    //translate to binary codes and start mapping
+    cout << sc << endl;
+    const string tLen = sc.substr(0, sc.find_first_of('='));
+    int l = stoi(tLen);
+    int start = binToDec(Dcd(sc.substr(sc.find_first_of('=') + 1, l)));
+    int init = tLen.length() + 1 + l;
+    string tree = sc.substr(init, start);
+    init += start;
+    string codes = sc.substr(init, sc.length());
+    cout << tree << endl;
+    cout << Dcd(codes);
 }
 
 void CMPDCP::createHuffmanTree()
