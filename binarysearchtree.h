@@ -34,6 +34,7 @@ public:
     bool flagged() const override;
     string getTree();
     void mapTree(string tree);
+    int len() const;
 
     const BinarySearchTree &operator=(const BinarySearchTree &rhs);
 

@@ -25,7 +25,7 @@ void CMPDCP::compression()
     appendBits(bits);
     std::ostream &os = std::cout;
     toByte(ls->last().retrieve()->getTree(), bits);
-    cout << "**Completed**" << endl;
+    cout << "bits :" << bits << endl;
 }
 void CMPDCP::decompression()
 {
@@ -41,14 +41,15 @@ void CMPDCP::decompression()
     string codes = sc.substr(init, sc.length());
     bst->mapTree(tree);
     hf = bst->huffman();
-    //hf->print();
+    const int size = bst->len();
+    for (int i = 0; i < size; i++)
+        hf[i].print();
     cout << Dcd(codes);
 }
 
 void CMPDCP::createHuffmanTree()
 {
     const int size = ls->size();
-    cout << "size " << size << endl;
     bits = "";
     while (ls->size() > 1)
     {

@@ -269,7 +269,7 @@ template <class Comparable>
 Huffman *BinarySearchTree<Comparable>::huffman(const int s)
 {
     s ? size = s : true;
-    cout << "in " << size << endl;
+    Scode = "";
     count = 0;
     hf = new Huffman[size];
     if (!root)
@@ -368,5 +368,11 @@ void BinarySearchTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
     }
     mapToChildren(t->left);
     mapToChildren(t->right);
+}
+
+template <class Comparable>
+int BinarySearchTree<Comparable>::len() const
+{
+    return size;
 }
 template class BinarySearchTree<Fileinfo<int>>;
