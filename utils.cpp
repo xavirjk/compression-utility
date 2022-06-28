@@ -92,6 +92,11 @@ string appendBits(string &bits, int num)
     return bits;
 }
 
+Fileinfo<int> getInfo(char ch, int t)
+{
+    return Fileinfo<int>(ch, t);
+}
+
 /*int binToDec(string str)
 {
     string num = str;

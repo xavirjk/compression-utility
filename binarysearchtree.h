@@ -2,7 +2,8 @@
 #define BINARYSEARCHTREE_H_
 
 #include "binarynode.h"
-#include "fileinfo.h"
+#include "utils.h"
+//#include "fileinfo.h"
 #include "huffman.h"
 #include <iostream>
 using namespace std;
@@ -20,7 +21,7 @@ public:
     bool findSymbol(char ch) const override;
     bool isEmpty() const;
     void print() const override;
-    Huffman *huffman(const int &size);
+    Huffman *huffman(const int size = 0);
 
     void makeEmpty();
     void insert(const Fileinfo<int> &f);
@@ -32,13 +33,14 @@ public:
     void flag() override;
     bool flagged() const override;
     string getTree();
+    void mapTree(string tree);
 
     const BinarySearchTree &operator=(const BinarySearchTree &rhs);
 
 private:
     BinaryNode<Comparable> *root;
     const Comparable ITEM_NOT_FOUND = -1;
-    int count = 0;
+    int count = 0, size = 0;
     string Scode = "";
     Huffman *hf;
 
@@ -58,6 +60,7 @@ private:
     void popBack();
     void _switch();
     void appendToTree(BinaryNode<Comparable> *t);
+    void mapToChildren(BinaryNode<Comparable> *&t);
 };
 
 #endif //BINARYSEARCHTREE_H_

@@ -29,11 +29,9 @@ void CMPDCP::compression()
 }
 void CMPDCP::decompression()
 {
+    BinarySearchTree<Fileinfo<int>> *bst = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
     cout << "initializing decompression" << endl;
     string sc = readFile("E:\\qt-rec\\413_test\\output.txt");
-    //create huffman tree using header infor
-    //translate to binary codes and start mapping
-    cout << sc << endl;
     const string tLen = sc.substr(0, sc.find_first_of('='));
     int l = stoi(tLen);
     int start = binToDec(Dcd(sc.substr(sc.find_first_of('=') + 1, l)));
@@ -41,13 +39,16 @@ void CMPDCP::decompression()
     string tree = sc.substr(init, start);
     init += start;
     string codes = sc.substr(init, sc.length());
-    cout << tree << endl;
+    bst->mapTree(tree);
+    hf = bst->huffman();
+    //hf->print();
     cout << Dcd(codes);
 }
 
 void CMPDCP::createHuffmanTree()
 {
     const int size = ls->size();
+    cout << "size " << size << endl;
     bits = "";
     while (ls->size() > 1)
     {
@@ -70,7 +71,8 @@ void CMPDCP::createHuffmanTree()
         ls->remove(min);
         ls->remove(min2);
     }
-    Huffman *hf = ls->last().retrieve()->huffman(size);
+    ls->printList(*ls);
+    hf = ls->last().retrieve()->huffman(size);
     for (int i = 0; i < size; i++)
         bits.append(hf[i].coded());
 }

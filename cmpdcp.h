@@ -17,6 +17,7 @@ private:
     int t;
     string fl, bits;
     List<BinarySearchTree<Fileinfo<int>>> *ls;
+    Huffman *hf;
     void createHuffmanTree();
 };
 #endif //CMPDCP_H_

@@ -22,7 +22,6 @@ public:
         }
         return *this;
     }
-
     Object frequency;
     const char symbol;
     bool flag = false;

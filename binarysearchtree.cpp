@@ -266,8 +266,10 @@ bool BinarySearchTree<Comparable>::flagged() const
 }
 
 template <class Comparable>
-Huffman *BinarySearchTree<Comparable>::huffman(const int &size)
+Huffman *BinarySearchTree<Comparable>::huffman(const int s)
 {
+    s ? size = s : true;
+    cout << "in " << size << endl;
     count = 0;
     hf = new Huffman[size];
     if (!root)
@@ -335,5 +337,36 @@ void BinarySearchTree<Comparable>::appendToTree(BinaryNode<Comparable> *t)
     Scode.append("0");
     appendToTree(t->left);
     appendToTree(t->right);
+}
+
+template <class Comparable>
+void BinarySearchTree<Comparable>::mapTree(string tree)
+{
+    Scode = tree;
+    cout << Scode << endl;
+    insert(getInfo());
+    count++;
+    mapToChildren(root->left);
+    mapToChildren(root->right);
+    print();
+    cout << endl;
+}
+template <class Comparable>
+void BinarySearchTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
+{
+    if (Scode.at(count) == '0')
+    {
+        insert(getInfo(), t);
+        count++;
+    }
+    else
+    {
+        insert(getInfo(Scode.at(count + 1), 1), t);
+        count += 2;
+        size++;
+        return;
+    }
+    mapToChildren(t->left);
+    mapToChildren(t->right);
 }
 template class BinarySearchTree<Fileinfo<int>>;
