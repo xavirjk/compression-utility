@@ -4,7 +4,7 @@ Huffman::~Huffman(){};
 int Huffman::getFrequency() const { return 1; }
 bool Huffman::flagged() const { return false; }
 void Huffman::flag() {}
-bool Huffman::findSymbol(char ch) const { return false; }
+bool Huffman::findSymbol(char ch) const { return ch == symbol; }
 void Huffman::print() const
 {
     cout << symbol << " " << code << endl;

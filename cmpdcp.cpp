@@ -31,14 +31,14 @@ void CMPDCP::decompression()
 {
     BinarySearchTree<Fileinfo<int>> *bst = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
     cout << "initializing decompression" << endl;
-    string sc = readFile("E:\\qt-rec\\413_test\\output.txt");
-    const string tLen = sc.substr(0, sc.find_first_of('='));
+    fl = readFile("E:\\qt-rec\\413_test\\output.txt");
+    const string tLen = fl.substr(0, fl.find_first_of('='));
     int l = stoi(tLen);
-    int start = binToDec(Dcd(sc.substr(sc.find_first_of('=') + 1, l)));
+    int start = binToDec(Dcd(fl.substr(fl.find_first_of('=') + 1, l)));
     int init = tLen.length() + 1 + l;
-    string tree = sc.substr(init, start);
+    string tree = fl.substr(init, start);
     init += start;
-    string codes = sc.substr(init, sc.length());
+    string codes = fl.substr(init, fl.length());
     bst->mapTree(tree);
     hf = bst->huffman();
     const int size = bst->len();
@@ -74,6 +74,11 @@ void CMPDCP::createHuffmanTree()
     }
     ls->printList(*ls);
     hf = ls->last().retrieve()->huffman(size);
-    for (int i = 0; i < size; i++)
-        bits.append(hf[i].coded());
+    for (const char s : fl)
+        for (int i = 0; i < size; i++)
+            if (hf[i].findSymbol(s))
+            {
+                bits.append(hf[i].coded());
+                break;
+            }
 }
