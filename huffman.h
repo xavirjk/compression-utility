@@ -16,7 +16,8 @@ public:
     bool flagged() const override;
     bool findSymbol(char ch) const override;
     void print() const override;
-    string coded();
+    string coded() const;
+    char getSymbol() const;
 
     void setData(const char &s = char(), const string &c = string());
 

@@ -96,28 +96,15 @@ Fileinfo<int> getInfo(char ch, int t)
 {
     return Fileinfo<int>(ch, t);
 }
-
-/*int binToDec(string str)
+void writeFile(string path, string data)
 {
-    string num = str;
-    int dec_value = 0;
-    int base = 1;
-
-    int len = num.length();
-    for (int i = len - 1; i >= 0; i--)
+    fstream fs;
+    fs.open(path);
+    if (!fs)
     {
-        if (num[i] == '1')
-            dec_value += base;
-        base = base * 2;
-        //cout << "b:" << base << " d:" << dec_value << endl;
+        cout << "fopen() failed for writing";
+        exit(EXIT_FAILURE);
     }
-    return dec_value;
-}*/
-/*
-void doThat(string in)
-{
-    bitset<8> bset(in);
-    unsigned long i = bset.to_ulong();
-    unsigned char c = static_cast<unsigned char>(i);
-    ecnd += c;
-}*/
+    fs << data;
+    fs.close();
+}

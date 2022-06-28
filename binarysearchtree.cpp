@@ -343,13 +343,10 @@ template <class Comparable>
 void BinarySearchTree<Comparable>::mapTree(string tree)
 {
     Scode = tree;
-    cout << Scode << endl;
     insert(getInfo());
     count++;
     mapToChildren(root->left);
     mapToChildren(root->right);
-    print();
-    cout << endl;
 }
 template <class Comparable>
 void BinarySearchTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)

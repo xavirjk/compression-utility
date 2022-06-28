@@ -16,7 +16,12 @@ void Huffman::setData(const char &s, const string &c)
     code = c;
 }
 
-string Huffman::coded()
+string Huffman::coded() const
 {
     return code;
+}
+
+char Huffman::getSymbol() const
+{
+    return symbol;
 }
