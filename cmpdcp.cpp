@@ -8,7 +8,7 @@ CMPDCP::CMPDCP()
 CMPDCP::~CMPDCP() {}
 void CMPDCP::compression()
 {
-    fl = readFile("E:\\qt-rec\\413_test\\data.txt");
+    fl = readFile("E:\\qt-rec\\413_test\\LICENSE");
     for (const char s : fl)
     {
         BinarySearchTree<Fileinfo<int>> *bst = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
@@ -23,7 +23,6 @@ void CMPDCP::compression()
     }
     createHuffmanTree();
     appendBits(bits);
-    std::ostream &os = std::cout;
     toByte(ls->last().retrieve()->getTree(), bits);
 }
 void CMPDCP::decompression()
@@ -31,33 +30,36 @@ void CMPDCP::decompression()
     BinarySearchTree<Fileinfo<int>> *bst = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
     cout << "initializing decompression" << endl;
     fl = readFile("E:\\qt-rec\\413_test\\output.txt");
-    cout << fl << endl;
     const string tLen = fl.substr(0, fl.find_first_of('='));
     int l = stoi(tLen);
     int start = binToDec(Dcd(fl.substr(fl.find_first_of('=') + 1, l)));
     int init = tLen.length() + 1 + l;
     string tree = fl.substr(init, start);
+    //cout << tree << "**" << endl;
     init += start;
     string codes = fl.substr(init, fl.length());
+    /*cout << "**" << codes << "**" << endl;
+    cout << codes.length() << endl;
+    cout << Dcd(codes) << endl;*/
     bst->mapTree(tree);
     hf = bst->huffman();
     const int size = bst->len();
     string decoded = Dcd(codes);
     string temp = "";
-    fl = "";
+    string jk = "";
     for (char s : decoded)
     {
         temp.push_back(s);
         for (int i = 0; i < size; i++)
             if (hf[i].coded() == temp)
             {
-                fl.push_back(hf[i].getSymbol());
+                jk.push_back(hf[i].getSymbol());
                 temp = "";
                 break;
             }
     }
-    writeFile("E:\\qt-rec\\413_test\\decoded.txt", fl);
-    cout << "**completed**";
+    cout << jk;
+    writeFile("E:\\qt-rec\\413_test\\decoded.txt", jk);
 }
 
 void CMPDCP::createHuffmanTree()

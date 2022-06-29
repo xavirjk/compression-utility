@@ -13,5 +13,7 @@ int _pow(int c, int base = 2);
 std::string toCharStr(int num);
 Fileinfo<int> getInfo(char ch = 'T', int t = -1);
 void writeFile(std::string path, std::string data);
+std::string readFile2(const std::string &path);
+std::string redBin(const std::string &path);
 
 #endif //UTILS_H_

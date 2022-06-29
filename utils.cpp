@@ -47,8 +47,7 @@ void toByte(string tree, string str)
         int decimal_value = binToDec((str.substr(i, 8)));
         res += char(decimal_value);
     }
-    fstream fs;
-    fs.open("E:\\qt-rec\\413_test\\output.txt");
+    ofstream fs("E:\\qt-rec\\413_test\\output.txt", std::fstream::trunc | std::fstream::binary);
     if (!fs)
     {
         cout << "fopen() failed for writing";
@@ -57,6 +56,9 @@ void toByte(string tree, string str)
     string encodedTreeL = toCharStr(tree.length());
     fs << encodedTreeL.length() << "=" << encodedTreeL << tree << res;
     fs.close();
+    /*cout << "**" << res << "**" << endl;
+    cout << res.length() << endl;
+    cout << Dcd(res);*/
 }
 string Dcd(string ec)
 {
@@ -71,7 +73,7 @@ string Dcd(string ec)
 string readFile(string path)
 {
     constexpr auto readSize = size_t(4096);
-    auto stream = ifstream(path.data());
+    auto stream = ifstream(path, fstream::in | fstream::binary);
     stream.exceptions(ios_base::badbit);
     auto out = string();
     auto buf = string(readSize, '\0');
@@ -81,6 +83,24 @@ string readFile(string path)
     }
     out.append(buf, 0, stream.gcount());
     return out;
+}
+std::string redBin(const std::string &path)
+{
+    ifstream fin(path, ios::binary);
+    ostringstream ostrm;
+    ostrm << fin.rdbuf();
+    return ostrm.str();
+}
+string readFile2(const string &path)
+{
+    ifstream ifs(path.c_str(), ios::in | ios::binary | ios::ate);
+    ifstream::pos_type fs = ifs.tellg();
+    if (fs < 0)
+        return string();
+    ifs.seekg(0, ios::beg);
+    vector<char> bytes(fs);
+    ifs.read(&bytes[0], fs);
+    return string(&bytes[0], fs);
 }
 
 string appendBits(string &bits, int num)
