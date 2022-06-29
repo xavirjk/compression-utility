@@ -118,7 +118,7 @@ Fileinfo<int> getInfo(char ch, int t)
 }
 void writeFile(string path, string data)
 {
-    ofstream fs(data, fstream::trunc | fstream::binary | fstream::in);
+    ofstream fs(path, fstream::trunc | fstream::binary);
     if (!fs)
     {
         cout << "failed for writing";
