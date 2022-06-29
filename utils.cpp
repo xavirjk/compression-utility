@@ -50,7 +50,7 @@ void toByte(string tree, string str)
     ofstream fs("E:\\qt-rec\\413_test\\output.txt", std::fstream::trunc | std::fstream::binary);
     if (!fs)
     {
-        cout << "fopen() failed for writing";
+        cout << "failed for writing";
         exit(EXIT_FAILURE);
     }
     string encodedTreeL = toCharStr(tree.length());
@@ -118,11 +118,10 @@ Fileinfo<int> getInfo(char ch, int t)
 }
 void writeFile(string path, string data)
 {
-    fstream fs;
-    fs.open(path);
+    ofstream fs(data, fstream::trunc | fstream::binary | fstream::in);
     if (!fs)
     {
-        cout << "fopen() failed for writing";
+        cout << "failed for writing";
         exit(EXIT_FAILURE);
     }
     fs << data;
