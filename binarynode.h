@@ -2,7 +2,7 @@
 #define BINARYNODE_H_
 
 template <class Comparable>
-class BinarySearchTree;
+class BTree;
 
 template <class Comparable>
 class BinaryNode
@@ -15,6 +15,6 @@ public:
     BinaryNode *left;
     BinaryNode *right;
 
-    friend class BinarySearchTree<Comparable>;
+    friend class BTree<Comparable>;
 };
 #endif //BINARYNODE_H_

@@ -17,7 +17,7 @@ private:
     const string path;
     int t;
     string fl, bits;
-    List<BinarySearchTree<Fileinfo<int>>> *ls;
+    List<BTree<Fileinfo<int>>> *ls;
     Huffman *hf;
     void createHuffmanTree();
 };

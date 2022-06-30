@@ -176,5 +176,5 @@ List<Object>::~List()
     delete header;
 }
 
-template class List<BinarySearchTree<Fileinfo<int>>>;
+template class List<BTree<Fileinfo<int>>>;
 template class List<Huffman>;

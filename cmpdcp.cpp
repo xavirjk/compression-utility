@@ -2,7 +2,7 @@
 #include <bitset>
 CMPDCP::CMPDCP(const string &fn) : path(fn)
 {
-    ls = new List<BinarySearchTree<Fileinfo<int>>>();
+    ls = new List<BTree<Fileinfo<int>>>();
     t = -1;
 }
 CMPDCP::~CMPDCP() {}
@@ -11,7 +11,7 @@ void CMPDCP::compression()
     fl = readFile(path);
     for (const char s : fl)
     {
-        BinarySearchTree<Fileinfo<int>> *bst = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
+        BTree<Fileinfo<int>> *bst = new BTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
         if (ls->findSymbol(s))
             continue;
         int frequency = 0;
@@ -27,7 +27,7 @@ void CMPDCP::compression()
 }
 void CMPDCP::decompression()
 {
-    BinarySearchTree<Fileinfo<int>> *bst = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
+    BTree<Fileinfo<int>> *bst = new BTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
     cout << "initializing decompression" << endl;
     fl = readFile(path);
     const string tLen = fl.substr(0, fl.find_first_of('='));
@@ -64,9 +64,9 @@ void CMPDCP::createHuffmanTree()
     bits = "";
     while (ls->size() > 1)
     {
-        BinarySearchTree<Fileinfo<int>> *nT = new BinarySearchTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
-        ListItr<BinarySearchTree<Fileinfo<int>>> min = ls->findMin();
-        ListItr<BinarySearchTree<Fileinfo<int>>> min2 = ls->findMin();
+        BTree<Fileinfo<int>> *nT = new BTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
+        ListItr<BTree<Fileinfo<int>>> min = ls->findMin();
+        ListItr<BTree<Fileinfo<int>>> min2 = ls->findMin();
         int f = min.retrieve()->getFrequency() + min2.retrieve()->getFrequency();
         nT->insert(Fileinfo<int>(ch, f));
         if (min.retrieve()->depth() < min2.retrieve()->depth())
@@ -83,7 +83,7 @@ void CMPDCP::createHuffmanTree()
         ls->remove(min);
         ls->remove(min2);
     }
-    //ls->printList(*ls);
+    ls->printList(*ls);
     hf = ls->last().retrieve()->huffman(size);
     for (const char s : fl)
         for (int i = 0; i < size; i++)

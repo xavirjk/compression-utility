@@ -2,7 +2,7 @@
 #define LIST_H_
 
 #include "listitr.h"
-#include "binarysearchtree.h"
+#include "btree.h"
 #include "huffman.h"
 #include <iostream>
 using namespace std;

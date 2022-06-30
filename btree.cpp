@@ -1,18 +1,18 @@
-#include "binarysearchtree.h"
+#include "btree.h"
 template <class Comparable>
-BinarySearchTree<Comparable>::BinarySearchTree(const Comparable &notFound) : ITEM_NOT_FOUND(notFound)
+BTree<Comparable>::BTree(const Comparable &notFound) : ITEM_NOT_FOUND(notFound)
 {
     root = nullptr;
 }
 
 template <class Comparable>
-BinarySearchTree<Comparable>::BinarySearchTree(const BinarySearchTree &rhs) : ITEM_NOT_FOUND(rhs.ITEM_NOT_FOUND)
+BTree<Comparable>::BTree(const BTree &rhs) : ITEM_NOT_FOUND(rhs.ITEM_NOT_FOUND)
 {
     root = rhs.root;
 }
 
 template <class Comparable>
-const BinarySearchTree<Comparable> &BinarySearchTree<Comparable>::operator=(const BinarySearchTree<Comparable> &rhs)
+const BTree<Comparable> &BTree<Comparable>::operator=(const BTree<Comparable> &rhs)
 {
     if (this != &rhs)
     {
@@ -23,7 +23,7 @@ const BinarySearchTree<Comparable> &BinarySearchTree<Comparable>::operator=(cons
 }
 
 template <class Comparable>
-BinaryNode<Comparable> *BinarySearchTree<Comparable>::clone(BinaryNode<Comparable> *t) const
+BinaryNode<Comparable> *BTree<Comparable>::clone(BinaryNode<Comparable> *t) const
 {
     if (t == nullptr)
         return nullptr;
@@ -32,13 +32,13 @@ BinaryNode<Comparable> *BinarySearchTree<Comparable>::clone(BinaryNode<Comparabl
 }
 
 template <class Comparable>
-BinarySearchTree<Comparable>::~BinarySearchTree()
+BTree<Comparable>::~BTree()
 {
     makeEmpty();
 }
 
 template <class Comparable>
-bool BinarySearchTree<Comparable>::findSymbol(char ch) const
+bool BTree<Comparable>::findSymbol(char ch) const
 {
     if (!root)
         return false;
@@ -50,7 +50,7 @@ bool BinarySearchTree<Comparable>::findSymbol(char ch) const
 }
 
 template <class Comparable>
-bool BinarySearchTree<Comparable>::hasSymbol(BinaryNode<Comparable> *t, char ch) const
+bool BTree<Comparable>::hasSymbol(BinaryNode<Comparable> *t, char ch) const
 {
     if (!t)
         return false;
@@ -65,19 +65,19 @@ bool BinarySearchTree<Comparable>::hasSymbol(BinaryNode<Comparable> *t, char ch)
 }
 
 template <class Comparable>
-const Comparable &BinarySearchTree<Comparable>::find(const Fileinfo<int> &f) const
+const Comparable &BTree<Comparable>::find(const Fileinfo<int> &f) const
 {
     return elementAt(find(f, root));
 }
 
 template <class Comparable>
-const Comparable &BinarySearchTree<Comparable>::elementAt(BinaryNode<Comparable> *t) const
+const Comparable &BTree<Comparable>::elementAt(BinaryNode<Comparable> *t) const
 {
     return t == nullptr ? ITEM_NOT_FOUND : t->element;
 }
 
 template <class Comparable>
-BinaryNode<Comparable> *BinarySearchTree<Comparable>::find(const Fileinfo<int> &f, BinaryNode<Comparable> *t) const
+BinaryNode<Comparable> *BTree<Comparable>::find(const Fileinfo<int> &f, BinaryNode<Comparable> *t) const
 {
     if (t == nullptr)
         return nullptr;
@@ -90,7 +90,7 @@ BinaryNode<Comparable> *BinarySearchTree<Comparable>::find(const Fileinfo<int> &
 }
 
 template <class Comparable>
-BinaryNode<Comparable> *BinarySearchTree<Comparable>::findMin(BinaryNode<Comparable> *t) const
+BinaryNode<Comparable> *BTree<Comparable>::findMin(BinaryNode<Comparable> *t) const
 { //Recursive implementation
     if (t == nullptr)
         return nullptr;
@@ -100,13 +100,13 @@ BinaryNode<Comparable> *BinarySearchTree<Comparable>::findMin(BinaryNode<Compara
 }
 
 template <class Comparable>
-const Comparable &BinarySearchTree<Comparable>::findMin() const
+const Comparable &BTree<Comparable>::findMin() const
 {
     return findMin(root)->element;
 }
 
 template <class Comparable>
-BinaryNode<Comparable> *BinarySearchTree<Comparable>::findMax(BinaryNode<Comparable> *t) const
+BinaryNode<Comparable> *BTree<Comparable>::findMax(BinaryNode<Comparable> *t) const
 { //Non recursive implementation
     if (t != nullptr)
         while (t->right != nullptr)
@@ -115,18 +115,18 @@ BinaryNode<Comparable> *BinarySearchTree<Comparable>::findMax(BinaryNode<Compara
 }
 
 template <class Comparable>
-const Comparable &BinarySearchTree<Comparable>::findMax() const
+const Comparable &BTree<Comparable>::findMax() const
 {
     return findMax(root)->element;
 }
 
 template <class Comparable>
-bool BinarySearchTree<Comparable>::isEmpty() const
+bool BTree<Comparable>::isEmpty() const
 {
     return root == nullptr;
 }
 template <class Comparable>
-int BinarySearchTree<Comparable>::depth()
+int BTree<Comparable>::depth()
 {
     count = 0;
     depth(root->left);
@@ -135,7 +135,7 @@ int BinarySearchTree<Comparable>::depth()
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::depth(BinaryNode<Comparable> *t)
+void BTree<Comparable>::depth(BinaryNode<Comparable> *t)
 {
     if (t == nullptr)
         return;
@@ -148,7 +148,7 @@ void BinarySearchTree<Comparable>::depth(BinaryNode<Comparable> *t)
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::insert(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
+void BTree<Comparable>::insert(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
 {
     if (t == nullptr)
         t = new BinaryNode<Comparable>(f, nullptr, nullptr);
@@ -161,25 +161,25 @@ void BinarySearchTree<Comparable>::insert(const Fileinfo<int> &f, BinaryNode<Com
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::insert(const Fileinfo<int> &f)
+void BTree<Comparable>::insert(const Fileinfo<int> &f)
 {
     insert(f, root);
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::insertLeft(const BinarySearchTree *rhs)
+void BTree<Comparable>::insertLeft(const BTree *rhs)
 {
     root->left = rhs->root;
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::insertRight(const BinarySearchTree *rhs)
+void BTree<Comparable>::insertRight(const BTree *rhs)
 {
     root->right = rhs->root;
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::remove(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
+void BTree<Comparable>::remove(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
 {
     if (t == nullptr)
         return;
@@ -201,13 +201,13 @@ void BinarySearchTree<Comparable>::remove(const Fileinfo<int> &f, BinaryNode<Com
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::remove(const Fileinfo<int> &f)
+void BTree<Comparable>::remove(const Fileinfo<int> &f)
 {
     remove(f, root);
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::makeEmpty(BinaryNode<Comparable> *&t) const
+void BTree<Comparable>::makeEmpty(BinaryNode<Comparable> *&t) const
 {
     if (t != nullptr)
     {
@@ -219,13 +219,13 @@ void BinarySearchTree<Comparable>::makeEmpty(BinaryNode<Comparable> *&t) const
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::makeEmpty()
+void BTree<Comparable>::makeEmpty()
 {
     makeEmpty(root);
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::preOrder(BinaryNode<Comparable> *t) const
+void BTree<Comparable>::preOrder(BinaryNode<Comparable> *t) const
 {
     if (t == nullptr)
         return;
@@ -238,7 +238,7 @@ void BinarySearchTree<Comparable>::preOrder(BinaryNode<Comparable> *t) const
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::print() const
+void BTree<Comparable>::print() const
 {
     if (!root)
         return;
@@ -248,25 +248,25 @@ void BinarySearchTree<Comparable>::print() const
 }
 
 template <class Comparable>
-int BinarySearchTree<Comparable>::getFrequency() const
+int BTree<Comparable>::getFrequency() const
 {
     return this->root->element.frequency;
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::flag()
+void BTree<Comparable>::flag()
 {
     this->root->element.flag = true;
 }
 
 template <class Comparable>
-bool BinarySearchTree<Comparable>::flagged() const
+bool BTree<Comparable>::flagged() const
 {
     return this->root->element.flag;
 }
 
 template <class Comparable>
-Huffman *BinarySearchTree<Comparable>::huffman(const int s)
+Huffman *BTree<Comparable>::huffman(const int s)
 {
     s ? size = s : true;
     Scode = "";
@@ -282,7 +282,7 @@ Huffman *BinarySearchTree<Comparable>::huffman(const int s)
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
+void BTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
 {
     if (!t->left && !t->right)
     {
@@ -301,20 +301,20 @@ void BinarySearchTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::popBack()
+void BTree<Comparable>::popBack()
 {
     if (Scode.length())
         Scode.pop_back();
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::_switch()
+void BTree<Comparable>::_switch()
 {
     popBack();
     Scode.append("1");
 }
 template <class Comparable>
-string BinarySearchTree<Comparable>::getTree()
+string BTree<Comparable>::getTree()
 {
     Scode = "";
     if (root)
@@ -327,7 +327,7 @@ string BinarySearchTree<Comparable>::getTree()
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::appendToTree(BinaryNode<Comparable> *t)
+void BTree<Comparable>::appendToTree(BinaryNode<Comparable> *t)
 {
     if (!t->left && !t->right)
     {
@@ -340,7 +340,7 @@ void BinarySearchTree<Comparable>::appendToTree(BinaryNode<Comparable> *t)
 }
 
 template <class Comparable>
-void BinarySearchTree<Comparable>::mapTree(string tree)
+void BTree<Comparable>::mapTree(string tree)
 {
     Scode = tree;
     insert(getInfo());
@@ -349,7 +349,7 @@ void BinarySearchTree<Comparable>::mapTree(string tree)
     mapToChildren(root->right);
 }
 template <class Comparable>
-void BinarySearchTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
+void BTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
 {
     if (Scode.at(count) == '0')
     {
@@ -368,8 +368,8 @@ void BinarySearchTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
 }
 
 template <class Comparable>
-int BinarySearchTree<Comparable>::len() const
+int BTree<Comparable>::len() const
 {
     return size;
 }
-template class BinarySearchTree<Fileinfo<int>>;
+template class BTree<Fileinfo<int>>;

@@ -1,5 +1,5 @@
-#ifndef BINARYSEARCHTREE_H_
-#define BINARYSEARCHTREE_H_
+#ifndef BTree_H_
+#define BTree_H_
 
 #include "binarynode.h"
 #include "utils.h"
@@ -8,12 +8,12 @@
 #include <iostream>
 using namespace std;
 template <class Comparable>
-class BinarySearchTree : public Entity
+class BTree : public Entity
 {
 public:
-    explicit BinarySearchTree(const Comparable &notFound);
-    BinarySearchTree(const BinarySearchTree &rhs);
-    ~BinarySearchTree();
+    explicit BTree(const Comparable &notFound);
+    BTree(const BTree &rhs);
+    ~BTree();
 
     const Comparable &findMin() const;
     const Comparable &findMax() const;
@@ -26,8 +26,8 @@ public:
     void makeEmpty();
     void insert(const Fileinfo<int> &f);
     int depth();
-    void insertLeft(const BinarySearchTree *rhs);
-    void insertRight(const BinarySearchTree *rhs);
+    void insertLeft(const BTree *rhs);
+    void insertRight(const BTree *rhs);
     void remove(const Fileinfo<int> &f);
     int getFrequency() const override;
     void flag() override;
@@ -36,7 +36,7 @@ public:
     void mapTree(string tree);
     int len() const;
 
-    const BinarySearchTree &operator=(const BinarySearchTree &rhs);
+    const BTree &operator=(const BTree &rhs);
 
 private:
     BinaryNode<Comparable> *root;
@@ -64,4 +64,4 @@ private:
     void mapToChildren(BinaryNode<Comparable> *&t);
 };
 
-#endif //BINARYSEARCHTREE_H_
+#endif //BTree_H_

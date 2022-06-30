@@ -2,7 +2,7 @@
 #define FILEINFO_H_
 
 template <class Comparable>
-class BinarySearchTree;
+class BTree;
 
 template <class Object>
 class Fileinfo
@@ -11,7 +11,7 @@ public:
     Fileinfo();
     Fileinfo(const char &s, Object &f) : symbol(s), frequency(f){};
     ~Fileinfo(){};
-    friend class BinarySearchTree<Object>;
+    friend class BTree<Object>;
 
     const Fileinfo &operator=(const Fileinfo &rhs)
     {
