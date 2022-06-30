@@ -5,7 +5,7 @@
 #include "fileinfo.h"
 
 int binToDec(std::string str);
-void toByte(std::string tree, std::string str);
+void toByte(std::string tree, std::string str, std::string path);
 std::string readFile(std::string path);
 std::string Dcd(std::string ec);
 std::string appendBits(std::string &bits, int num = 8);

@@ -7,13 +7,14 @@
 class CMPDCP
 {
 public:
-    CMPDCP();
+    CMPDCP(const string &fn = string());
     ~CMPDCP();
     void compression();
     void decompression();
 
 private:
     const char ch = 'T';
+    const string path;
     int t;
     string fl, bits;
     List<BinarySearchTree<Fileinfo<int>>> *ls;

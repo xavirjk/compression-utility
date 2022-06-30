@@ -36,7 +36,7 @@ string toCharStr(int num)
     return res;
 }
 
-void toByte(string tree, string str)
+void toByte(string tree, string str, string path)
 {
     int N = int(str.size());
     if (N % 8 != 0)
@@ -47,7 +47,7 @@ void toByte(string tree, string str)
         int decimal_value = binToDec((str.substr(i, 8)));
         res += char(decimal_value);
     }
-    ofstream fs("E:\\qt-rec\\413_test\\output.txt", std::fstream::trunc | std::fstream::binary);
+    ofstream fs(path, std::fstream::trunc | std::fstream::binary);
     if (!fs)
     {
         cout << "failed for writing";
@@ -56,9 +56,6 @@ void toByte(string tree, string str)
     string encodedTreeL = toCharStr(tree.length());
     fs << encodedTreeL.length() << "=" << encodedTreeL << tree << res;
     fs.close();
-    /*cout << "**" << res << "**" << endl;
-    cout << res.length() << endl;
-    cout << Dcd(res);*/
 }
 string Dcd(string ec)
 {
