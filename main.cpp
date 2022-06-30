@@ -7,10 +7,14 @@ int main(int argc, char *argv[])
         cout << "EXIT!! No valid arguments provided.\nmain.exe <c||d> <path>";
         return 0;
     }
+    /**
+     * pass the second argument as the path to the file
+     */
+
     CMPDCP *tool = new CMPDCP(argv[2]);
     if (validity == "c")
-        tool->compression();
+        tool->compression(); //Compress the file
     else
-        tool->decompression();
+        tool->decompression(); //Decompress the file
     return 0;
 }

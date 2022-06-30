@@ -124,3 +124,23 @@ void writeFile(string path, string data)
     fs << data;
     fs.close();
 }
+
+/*for (char s : decoded)
+    {
+        temp.push_back(s);
+        for (int i = 0; i < size; i++)
+            if (hf[i].coded() == temp)
+            {
+                jk.push_back(hf[i].getSymbol());
+                temp = "";
+                break;
+            }
+    }*/
+
+/*for (const char s : fl)
+        for (int i = 0; i < size; i++)
+            if (hf[i].findSymbol(s))
+            {
+                bits.append(hf[i].coded());
+                break;
+            }*/

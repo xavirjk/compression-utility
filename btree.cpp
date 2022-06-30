@@ -125,6 +125,7 @@ bool BTree<Comparable>::isEmpty() const
 {
     return root == nullptr;
 }
+
 template <class Comparable>
 int BTree<Comparable>::depth()
 {
@@ -286,7 +287,8 @@ void BTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
 {
     if (!t->left && !t->right)
     {
-        hf[count].setData(t->element.symbol, Scode);
+        //hf[count].setData(t->element.symbol, Scode);
+        t->element.code = Scode;
         count++;
         return;
     }
@@ -372,4 +374,64 @@ int BTree<Comparable>::len() const
 {
     return size;
 }
+template <class Comparable>
+string BTree<Comparable>::getCode(char ch)
+{
+    if (!returnCode(root->left, ch))
+        returnCode(root->right, ch);
+    return Scode;
+}
+
+template <class Comparable>
+bool BTree<Comparable>::returnCode(BinaryNode<Comparable> *t, char ch)
+{
+    if (!t->left && !t->right)
+    {
+        if (t->element.symbol == ch)
+        {
+            Scode = t->element.code;
+            return true;
+        }
+        return false;
+    }
+    if (returnCode(t->left, ch))
+        return true;
+    return returnCode(t->right, ch);
+}
+
+template <class Comparable>
+bool BTree<Comparable>::_getSymbol(string _c)
+{
+    c = char();
+    symbolFound = false;
+    if (!returnSymbol(root->left, _c))
+        returnSymbol(root->right, _c);
+    return symbolFound;
+}
+
+template <class Comparable>
+bool BTree<Comparable>::returnSymbol(BinaryNode<Comparable> *t, string code)
+{
+    if (!t->left && !t->right)
+    {
+        if (t->element.code == code)
+        {
+            c = t->element.symbol;
+            symbolFound = true;
+            return true;
+        }
+        return false;
+    }
+    if (returnSymbol(t->left, code))
+        return true;
+    return returnSymbol(t->right, code);
+}
+
+template <class Comparable>
+char BTree<Comparable>::_symbol() const
+{
+    return c;
+}
 template class BTree<Fileinfo<int>>;
+
+//ABCDEAFE

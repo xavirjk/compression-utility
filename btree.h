@@ -21,6 +21,8 @@ public:
     bool findSymbol(char ch) const override;
     bool isEmpty() const;
     void print() const override;
+    string getCode(char ch);
+    char _symbol() const;
     Huffman *huffman(const int size = 0);
 
     void makeEmpty();
@@ -34,6 +36,7 @@ public:
     bool flagged() const override;
     string getTree();
     void mapTree(string tree);
+    bool _getSymbol(string _code);
     int len() const;
 
     const BTree &operator=(const BTree &rhs);
@@ -43,7 +46,9 @@ private:
     const Comparable ITEM_NOT_FOUND = -1;
     int count = 0, size = 0;
     string Scode = "";
+    char c;
     Huffman *hf;
+    bool symbolFound;
 
     const Comparable &
     elementAt(BinaryNode<Comparable> *t) const;
@@ -62,6 +67,8 @@ private:
     void _switch();
     void appendToTree(BinaryNode<Comparable> *t);
     void mapToChildren(BinaryNode<Comparable> *&t);
+    bool returnCode(BinaryNode<Comparable> *t, char ch);
+    bool returnSymbol(BinaryNode<Comparable> *t, string code);
 };
 
 #endif //BTree_H_

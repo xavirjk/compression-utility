@@ -1,5 +1,6 @@
 #ifndef FILEINFO_H_
 #define FILEINFO_H_
+#include <string>
 
 template <class Comparable>
 class BTree;
@@ -24,6 +25,7 @@ public:
     }
     Object frequency;
     const char symbol;
+    std::string code;
     bool flag = false;
 };
 #endif //FILEINFO_H_
