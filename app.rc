@@ -1,0 +1,23 @@
+#include "resource.h"
+IDR_MY_MENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "Open", ID_FILE_OPEN
+        MENUITEM "Close", ID_FILE_CLOSE
+        MENUITEM "Exit", ID_FILE_EXIT
+    END
+    POPUP "&Command"
+    BEGIN
+        MENUITEM "&Huffman encoding", ID_HUFFMAN
+        MENUITEM "Ca&nonize Huffman", ID_CANONIZE
+    END
+    POPUP "&Stuff"
+    BEGIN
+        MENUITEM "&Go", ID_STUFF_GO
+        MENUITEM "G&o Somewhere Else", 0, GRAYED
+    END
+    MENUITEM "&Help", ID_HELP
+END
+
+IDI_MY_ICON ICON "icon.ico"
