@@ -3,14 +3,14 @@ IDR_MY_MENU MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "Open", ID_FILE_OPEN
+        MENUITEM "&Open\tCtrl+O", ID_FILE_OPEN
         MENUITEM "Close", ID_FILE_CLOSE
-        MENUITEM "Exit", ID_FILE_EXIT
+        MENUITEM "&Exit\tCtrl+Q", ID_FILE_EXIT
     END
     POPUP "&Command"
     BEGIN
-        MENUITEM "&Huffman encoding", ID_HUFFMAN
-        MENUITEM "Ca&nonize Huffman", ID_CANONIZE
+        MENUITEM "&Huffman encoding\tCtrl+H", ID_HUFFMAN
+        MENUITEM "Ca&nonize Huffman\tCtrl+N", ID_CANONIZE
     END
     POPUP "&Stuff"
     BEGIN

@@ -84,5 +84,5 @@ protected:
     virtual void openFileDialog() = 0;
 
     HWND m_hwnd;
-    HWND d_hwnd;
+    HFONT hFstrong;
 };

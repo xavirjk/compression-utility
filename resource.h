@@ -7,6 +7,8 @@
 #define IDC_CHK2 503
 #define IDC_BTNCMP 504
 #define IDC_FLTXT 505
+#define IDC_SEP 506
+#define IDC_TXT0 507
 
 #define ID_FILE_OPEN 9001
 #define ID_FILE_CLOSE 9002

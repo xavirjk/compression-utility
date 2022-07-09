@@ -20,13 +20,15 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         return 0;
     case WM_CREATE:
     {
-        /*HFONT hfDefault;
-        HWND hEdit;
-        hEdit = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL, 0, 0, 100, 100, m_hwnd, (HMENU)IDC_MAIN_EDIT, GetModuleHandle(NULL), NULL);
-        if (hEdit == NULL)
-            MessageBox(m_hwnd, "Could not create Edit box", "Error", MB_OK | MB_ICONERROR);*/
-        //hfDefault = GetStockObject(DEFAULT_GUI_FONT);
-        //SendMessage(hEdit, WM_SETFONT, (WPARAM)hfDefault, MAKELPARAM(FALSE, 0));
+        HFONT hFont;
+        GetObject(GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
+        hFstrong = CreateFont(19, lf.lfWidth, lf.lfEscapement, lf.lfOrientation, 600, lf.lfItalic, lf.lfUnderline,
+                              lf.lfStrikeOut, lf.lfCharSet, lf.lfOutPrecision, lf.lfClipPrecision, lf.lfQuality, lf.lfPitchAndFamily, "Times NewRoman");
+        CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 550, 20, 10, 400, m_hwnd, (HMENU)IDC_SEP, GetModuleHandle(NULL), NULL);
+        HWND fText1 = CreateWindow("STATIC", "File Open", WS_VISIBLE | WS_CHILD | SS_RIGHT, 580, 40, 80, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+        SendMessage(fText1, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
+        HWND fText2 = CreateWindow("STATIC", "CTRL + O", WS_VISIBLE | WS_CHILD | SS_LEFT, 670, 40, 100, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+        SendMessage(fText2, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
     }
         return 0;
     case WM_DRAWITEM:
@@ -42,6 +44,12 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             DrawText(lpDIS->hDC, "Start Compression", -1, &lpDIS->rcItem, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
             return TRUE;
         }
+        else if (wParam == IDC_SEP)
+        {
+            SetDCBrushColor(lpDIS->hDC, RGB(50, 50, 50));
+            RoundRect(lpDIS->hDC, lpDIS->rcItem.left, lpDIS->rcItem.top, lpDIS->rcItem.right, lpDIS->rcItem.bottom, 5, 5);
+            return TRUE;
+        }
         break;
     }
     case WM_SIZE:
@@ -50,12 +58,13 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         RECT rcClient;
         GetClientRect(m_hwnd, &rcClient);
         SetWindowPos(GetDlgItem(m_hwnd, IDC_MAIN_EDIT), NULL, 0, 0, rcClient.right, rcClient.bottom, SWP_NOZORDER);
-        SetWindowPos(GetDlgItem(m_hwnd, IDC_GRPBUTTONS), NULL, 10, 10, rcClient.right - 100, rcClient.top + 100, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_GRPBUTTONS), NULL, 10, 10, rcClient.right - 300, rcClient.top + 100, SWP_NOZORDER);
     }
         return 0;
     case WM_CTLCOLORSTATIC:
     {
         HDC hdc = (HDC)wParam;
+        bool tt = wParam == 505;
         SetTextColor(hdc, RGB(0, 0, 0));
         SetBkMode(hdc, OPAQUE);
         return (INT_PTR)GetStockObject(HOLLOW_BRUSH);
@@ -81,7 +90,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             ShowWindow(GetDlgItem(m_hwnd, IDC_MAIN_EDIT), SW_HIDE);
             HWND hGrpButton;
 
-            hGrpButton = CreateWindowEx(WS_EX_WINDOWEDGE, "BUTTON", "Select Process Mode:", WS_VISIBLE | WS_CHILD | WS_EX_TRANSPARENT | BS_GROUPBOX, 10, 10, 600, 100, m_hwnd, (HMENU)IDC_GRPBUTTONS, GetModuleHandle(NULL), NULL);
+            hGrpButton = CreateWindowEx(WS_EX_WINDOWEDGE, "BUTTON", "Select Process Mode:", WS_VISIBLE | WS_CHILD | WS_EX_TRANSPARENT | BS_GROUPBOX, 10, 10, 500, 100, m_hwnd, (HMENU)IDC_GRPBUTTONS, GetModuleHandle(NULL), NULL);
             SendMessage(hGrpButton, WM_SETFONT, WPARAM(hFont), TRUE);
             HWND rb1 = CreateWindowEx(WS_EX_WINDOWEDGE, "BUTTON", "Huffman encoding", WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON | WS_GROUP, 30, 50, 200, 20, m_hwnd, (HMENU)IDC_CHK1, GetModuleHandle(NULL), NULL);
             SendMessage(rb1, WM_SETFONT, WPARAM(hFont), TRUE);
@@ -91,6 +100,14 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             SendMessage(fText, WM_SETFONT, WPARAM(hFont), MAKELPARAM(FALSE, 0));
             HWND ft = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | BS_OWNERDRAW, 10, 200, 150, 40, m_hwnd, (HMENU)IDC_BTNCMP, GetModuleHandle(NULL), NULL);
             SendMessage(ft, WM_SETFONT, WPARAM(hFont), TRUE);
+            HWND fText1 = CreateWindow("STATIC", "Huffman", WS_VISIBLE | WS_CHILD | SS_RIGHT, 580, 80, 80, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+            SendMessage(fText1, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
+            HWND fText2 = CreateWindow("STATIC", "CTRL + H", WS_VISIBLE | WS_CHILD | SS_LEFT, 670, 80, 100, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+            SendMessage(fText2, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
+            HWND fText3 = CreateWindow("STATIC", "Canonize", WS_VISIBLE | WS_CHILD | SS_RIGHT, 580, 120, 80, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+            SendMessage(fText3, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
+            HWND fText4 = CreateWindow("STATIC", "CTRL + N", WS_VISIBLE | WS_CHILD | SS_LEFT, 670, 120, 100, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+            SendMessage(fText4, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
             break;
         }
         case ID_FILE_EXIT:
