@@ -46,12 +46,26 @@ void CMPDCP::decompression()
     init += start;
     string codes = fl.substr(init, fl.length());
     tree->mapTree(_tree); //Reconstruct huffman tree
+    cout << "reco" << endl;
     const int size = tree->len();
     string decoded = Dcd(codes);
     string temp = "";
     fl = "";
-    tree->huffman();
+    cout << "done 2" << endl;
+    hf = tree->huffman();
+    cout << "done 3" << endl;
     for (char s : decoded)
+    {
+        temp.push_back(s);
+        for (int i = 0; i < size; i++)
+            if (hf[i].coded() == temp)
+            {
+                fl.push_back(hf[i].getSymbol());
+                temp = "";
+                break;
+            }
+    }
+    /*for (char s : decoded)
     {
         temp += s;
         if (tree->_getSymbol(temp))
@@ -59,7 +73,8 @@ void CMPDCP::decompression()
             fl += tree->_symbol();
             temp = "";
         }
-    }
+    }*/
+    cout << "done 4" << endl;
     writeFile(path, fl);
     cout << "**Completed**" << endl;
 }
@@ -94,16 +109,22 @@ void CMPDCP::createHuffmanTree()
         ls->remove(min2);
     }
     //Print  the contents of the tree
-    ls->printList(*ls);
     /**
      * get the path of each char as binary code, when moving to the left 
      * maintain a 0 and to the right a 1
      */
-    ls->last().retrieve()->huffman(size);
+    hf = ls->last().retrieve()->huffman(size);
     /**
      * This is the second pass of the file translate each character in the file into its 
      * equivalent code
     */
+    /*for (const char s : fl)
+        bits.append(ls->last().retrieve()->getCode(s));*/
     for (const char s : fl)
-        bits.append(ls->last().retrieve()->getCode(s));
+        for (int i = 0; i < size; i++)
+            if (hf[i].findSymbol(s))
+            {
+                bits.append(hf[i].coded());
+                break;
+            }
 }

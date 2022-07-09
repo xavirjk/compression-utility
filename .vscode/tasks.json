@@ -9,7 +9,10 @@
 				"-g",
 				"${workspaceFolder}\\/*.cpp",
 				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				"${fileDirname}\\${fileBasenameNoExtension}.dll",
+				"-D CMPDCPLIB_EXPORT",
+				"-s",
+				"-shared",
 				"-I",
 				"E:\\qt-rec\\413_project"
 			],

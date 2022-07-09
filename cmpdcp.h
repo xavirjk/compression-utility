@@ -1,10 +1,11 @@
 #ifndef CMPDCP_H_
 #define CMPDCP_H_
 
+#include "cmpdcp_lib_global.h"
 #include "list.h"
 #include "utils.h"
 #include <string>
-class CMPDCP
+class HCAPI CMPDCP
 {
 public:
     CMPDCP(const string &fn = string());

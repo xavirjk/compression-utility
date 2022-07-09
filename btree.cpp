@@ -287,7 +287,7 @@ void BTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
 {
     if (!t->left && !t->right)
     {
-        //hf[count].setData(t->element.symbol, Scode);
+        hf[count].setData(t->element.symbol, Scode);
         t->element.code = Scode;
         count++;
         return;
