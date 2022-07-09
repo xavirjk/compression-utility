@@ -1,4 +1,6 @@
 #include "basewindow.h"
+#include "cmpdcp.h"
+
 class MainWindow : public BaseWindow<MainWindow>
 {
 public:
@@ -6,4 +8,9 @@ public:
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
     BOOL HandleDialog(UINT uMsg, WPARAM wParam);
     void openFileDialog();
+
+private:
+    CMPDCP *root;
+    char *nstring;
+    bool huff = true;
 };

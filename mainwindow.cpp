@@ -3,18 +3,14 @@
 #define FFS_HH 100
 #include "mainwindow.h"
 #include <shobjidl.h>
+#include "string.h"
+#include <mbstring.h>
 
 LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     LOGFONT lf;
     switch (uMsg)
     {
-    case WM_CLOSE:
-        if (MessageBox(m_hwnd, "Really Quit?", "Applicaton", MB_OKCANCEL) == IDOK)
-        {
-            DestroyWindow(m_hwnd);
-        }
-        return 0;
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
@@ -96,7 +92,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             SendMessage(rb1, WM_SETFONT, WPARAM(hFont), TRUE);
             HWND rb2 = CreateWindowEx(WS_EX_WINDOWEDGE, "BUTTON", "Canonize Huffman", WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON, 250, 50, 200, 20, m_hwnd, (HMENU)IDC_CHK2, GetModuleHandle(NULL), NULL);
             SendMessage(rb2, WM_SETFONT, WPARAM(hFont), TRUE);
-            HWND fText = CreateWindow("STATIC", "C:\\Qt_proj.s\\ComputerVision\\repos\\skillset\\windows", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 150, 500, 30, m_hwnd, (HMENU)IDC_FLTXT, GetModuleHandle(NULL), NULL);
+            HWND fText = CreateWindow("STATIC", nstring, WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 150, 500, 30, m_hwnd, (HMENU)IDC_FLTXT, GetModuleHandle(NULL), NULL);
             SendMessage(fText, WM_SETFONT, WPARAM(hFont), MAKELPARAM(FALSE, 0));
             HWND ft = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | BS_OWNERDRAW, 10, 200, 150, 40, m_hwnd, (HMENU)IDC_BTNCMP, GetModuleHandle(NULL), NULL);
             SendMessage(ft, WM_SETFONT, WPARAM(hFont), TRUE);
@@ -110,6 +106,15 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             SendMessage(fText4, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
             break;
         }
+        case IDC_BTNCMP:
+            root->compression();
+            break;
+        case IDC_CHK1:
+            huff = true;
+            break;
+        case IDC_CHK2:
+            huff = false;
+            break;
         case ID_FILE_EXIT:
             PostMessage(m_hwnd, WM_CLOSE, 0, 0);
             break;
@@ -121,25 +126,8 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         case ID_FILE_CLOSE:
             break;
         case ID_HELP:
-        {
-            int ret = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), m_hwnd, (DLGPROC)AboutDlgProc);
-            if (ret == IDOK)
-            {
-                MessageBox(m_hwnd,
-                           "Dialog exited with IDOK.", "Notice", MB_OK | MB_ICONINFORMATION);
-            }
-            else if (ret == IDCANCEL)
-            {
-                MessageBox(m_hwnd,
-                           "Dialog exited with IDCANCEL.", "Notice", MB_OK | MB_ICONINFORMATION);
-            }
-            else if (ret == -1)
-            {
-                MessageBox(m_hwnd,
-                           "Dialog Failed!", "Error", MB_OK | MB_ICONINFORMATION);
-            }
-        }
-        break;
+            DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), m_hwnd, (DLGPROC)AboutDlgProc);
+            break;
         }
     default:
         return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
@@ -191,9 +179,22 @@ void MainWindow::openFileDialog()
                     hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
                     if (SUCCEEDED(hr))
                     {
-                        MessageBoxW(NULL, pszFilePath, L"File Path", MB_OK);
+                        size_t origSize = wcslen(pszFilePath) + 1;
+                        size_t converted = 0;
+                        char strConcat[] = "";
+                        size_t strConcatSize = (strlen(strConcat) + 1) * 2;
+                        const size_t newSize = origSize * 2;
+                        nstring = new char[newSize + strConcatSize];
+                        wcstombs_s(&converted, nstring, newSize, pszFilePath, _TRUNCATE);
+                        _mbscat_s((unsigned char *)nstring, newSize + strConcatSize, (unsigned char *)strConcat);
+                        delete[] nstring;
+                        root = new CMPDCP(nstring);
                         CoTaskMemFree(pszFilePath);
-                        SendMessage(m_hwnd, WM_COMMAND, (WPARAM)FFS_HH, 0);
+                        string ss = nstring, ext = ss.substr(ss.find_last_of(".") + 1);
+                        if (ext == "huf")
+                            root->decompression();
+                        else
+                            SendMessage(m_hwnd, WM_COMMAND, (WPARAM)FFS_HH, 0);
                     }
                     pItem->Release();
                 }
