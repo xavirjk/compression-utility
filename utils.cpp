@@ -144,3 +144,16 @@ void writeFile(string path, string data)
                 bits.append(hf[i].coded());
                 break;
             }*/
+
+/*for (const char s : fl)
+        bits.append(ls->last().retrieve()->getCode(s));*/
+
+/*for (char s : decoded)
+    {
+        temp += s;
+        if (tree->_getSymbol(temp))
+        {
+            fl += tree->_symbol();
+            temp = "";
+        }
+    }*/

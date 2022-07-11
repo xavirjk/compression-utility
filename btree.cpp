@@ -433,5 +433,3 @@ char BTree<Comparable>::_symbol() const
     return c;
 }
 template class BTree<Fileinfo<int>>;
-
-//ABCDEAFE
