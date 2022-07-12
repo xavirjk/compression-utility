@@ -267,8 +267,9 @@ bool BTree<Comparable>::flagged() const
 }
 
 template <class Comparable>
-Huffman *BTree<Comparable>::huffman(const int s)
+Huffman *BTree<Comparable>::huffman(const int s, bool canonize)
 {
+    canonical_flag = canonize;
     s ? size = s : true;
     Scode = "";
     count = 0;
@@ -287,7 +288,7 @@ void BTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
 {
     if (!t->left && !t->right)
     {
-        hf[count].setData(t->element.symbol, Scode);
+        hf[count].setData(t->element.symbol, Scode, canonical_flag);
         t->element.code = Scode;
         count++;
         return;
@@ -367,6 +368,37 @@ void BTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
     }
     mapToChildren(t->left);
     mapToChildren(t->right);
+}
+
+template <class Comparable>
+void BTree<Comparable>::canonized(string path, char c)
+{
+    if (!path[0])
+        canonizeChildren(root->left, path, c);
+    else
+        canonizeChildren(root->right, path, c);
+}
+template <class Comparable>
+void BTree<Comparable>::canonizeChildren(BinaryNode<Comparable> *&t, string code, char _c, int i)
+{
+    if (code.length() == i)
+    {
+        insert(getInfo(_c), t);
+        return;
+    }
+    if (t == nullptr)
+        insert(getInfo(), t);
+    if (!code[i])
+        canonizeChildren(t->left, code, _c, ++i);
+    else
+        canonizeChildren(t->right, code, _c, ++i);
+}
+
+template <class Comparable>
+void BTree<Comparable>::createRoot()
+{
+    if (!root)
+        insert(getInfo());
 }
 
 template <class Comparable>

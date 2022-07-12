@@ -5,7 +5,12 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-int _pow(int c, int base)
+Fileinfo<int> getInfo(char ch, int t)
+{
+    return Fileinfo<int>(ch, t);
+}
+
+/*int _pow(int c, int base)
 {
     if (c == 0)
         return 1;
@@ -109,10 +114,7 @@ string appendBits(string &bits, int num)
     return bits;
 }
 
-Fileinfo<int> getInfo(char ch, int t)
-{
-    return Fileinfo<int>(ch, t);
-}
+
 void writeFile(string path, string data)
 {
     ofstream fs(path, fstream::trunc | fstream::binary);
@@ -123,7 +125,7 @@ void writeFile(string path, string data)
     }
     fs << data;
     fs.close();
-}
+}*/
 
 /*for (char s : decoded)
     {

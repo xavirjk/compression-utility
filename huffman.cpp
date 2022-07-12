@@ -10,10 +10,13 @@ void Huffman::print() const
     cout << symbol << " " << code << endl;
 }
 
-void Huffman::setData(const char &s, const string &c)
+void Huffman::setData(const char &s, const string &c, bool canonical)
 {
     symbol = s;
-    code = c;
+    if (canonical)
+        len = c.length();
+    else
+        code = c;
 }
 
 string Huffman::coded() const
@@ -25,3 +28,8 @@ char Huffman::getSymbol() const
 {
     return symbol;
 }
+int Huffman::_len() const
+{
+    return len;
+}
+void Huffman::canonicalCodes(const string &c) { code = c; }

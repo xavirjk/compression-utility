@@ -18,12 +18,15 @@ public:
     void print() const override;
     string coded() const;
     char getSymbol() const;
+    int _len() const;
 
-    void setData(const char &s = char(), const string &c = string());
+    void setData(const char &s = char(), const string &c = string(), bool canonical = true);
+    void canonicalCodes(const string &c = string());
 
 private:
     string code;
     char symbol;
+    int len;
 };
 
 #endif //HUFFMAN_H_

@@ -23,7 +23,7 @@ public:
     void print() const override;
     string getCode(char ch);
     char _symbol() const;
-    Huffman *huffman(const int size = 0);
+    Huffman *huffman(const int size = 0, bool canonize = true);
 
     void makeEmpty();
     void insert(const Fileinfo<int> &f);
@@ -36,6 +36,8 @@ public:
     bool flagged() const override;
     string getTree();
     void mapTree(string tree);
+    void canonized(string path, char c);
+    void createRoot();
     bool _getSymbol(string _code);
     int len() const;
 
@@ -48,7 +50,7 @@ private:
     string Scode = "";
     char c;
     Huffman *hf;
-    bool symbolFound;
+    bool symbolFound, canonical_flag = true;
 
     const Comparable &
     elementAt(BinaryNode<Comparable> *t) const;
@@ -69,6 +71,7 @@ private:
     void mapToChildren(BinaryNode<Comparable> *&t);
     bool returnCode(BinaryNode<Comparable> *t, char ch);
     bool returnSymbol(BinaryNode<Comparable> *t, string code);
+    void canonizeChildren(BinaryNode<Comparable> *&t, string code, char _c, int index = 1);
 };
 
 #endif //BTree_H_
