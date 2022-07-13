@@ -107,13 +107,13 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             break;
         }
         case IDC_BTNCMP:
-            root->compression();
+            root->compression(canonize);
             break;
         case IDC_CHK1:
-            huff = true;
+            canonize = false;
             break;
         case IDC_CHK2:
-            huff = false;
+            canonize = true;
             break;
         case ID_FILE_EXIT:
             PostMessage(m_hwnd, WM_CLOSE, 0, 0);
@@ -191,8 +191,8 @@ void MainWindow::openFileDialog()
                         root = new CMPDCP(nstring);
                         CoTaskMemFree(pszFilePath);
                         string ss = nstring, ext = ss.substr(ss.find_last_of(".") + 1);
-                        if (ext == "huf")
-                            root->decompression();
+                        if (ext == "huf" || ext == "cnz")
+                            root->decompression(ext);
                         else
                             SendMessage(m_hwnd, WM_COMMAND, (WPARAM)FFS_HH, 0);
                     }

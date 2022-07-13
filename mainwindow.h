@@ -12,5 +12,5 @@ public:
 private:
     CMPDCP *root;
     char *nstring;
-    bool huff = true;
+    bool canonize = true;
 };
