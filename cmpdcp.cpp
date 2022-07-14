@@ -10,9 +10,8 @@ CMPDCP::CMPDCP(const string &fn) : path(fn)
     t = -1;
 }
 CMPDCP::~CMPDCP() {}
-void CMPDCP::compression(bool canonize)
+void CMPDCP::compression()
 {
-    _canonize = canonize;
     fl = readFile(path);
 
     for (const char s : fl)
@@ -29,89 +28,21 @@ void CMPDCP::compression(bool canonize)
     }
 
     createHuffmanTree();
-    if (canonize)
-    {
-        HeapSort *hp = new HeapSort();
-
-        hp->heapSort(hf, size);
-        for (int i = 0; i < size; i++)
-        {
-            int k;
-
-            if (size == i + 1 || hf[i]._len() != hf[i + 1]._len())
-                continue;
-
-            for (k = i + 1; k < size; k++)
-                if (hf[k]._len() != hf[i]._len())
-                    break;
-
-            hp->heapSort(hf, k - i, true, i);
-
-            i += k - i - 1;
-        }
-        canonizeHuffman();
-        string newPath = path.substr(0, path.find_last_of(".")) + ".cnz";
-        ofstream out(newPath, ios::out | ios::binary);
-        writeHead(out, path.substr(path.find_last_of(".") + 1));
-        writeBody(out);
-    }
-    else
-    {
-        for (const char s : fl)
-            for (int i = 0; i < size; i++)
-                if (hf[i].findSymbol(s))
-                {
-                    bits.append(hf[i].coded());
-                    break;
-                }
-        //appendBits(bits);
-        //string newPath = path.substr(0, path.find_last_of(".")) + ".huf";
-        //toByte(ls->last().retrieve()->getTree(), bits, newPath);
-    }
+    string newPath = path.substr(0, path.find_last_of(".")) + ".huf";
+    ofstream out(newPath, ios::out | ios::binary);
+    file_extension = path.substr(path.find_last_of("."));
+    writeHead(out);
+    writeBody(out);
 }
-void CMPDCP::decompression(string fileType)
+void CMPDCP::decompression()
 {
     tree = new BTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
-
     fl = readFile(path);
-    if (fileType == "cnz")
-    {
-        start = 0;
-        readHead();
-        readBody();
-    }
-    //const string tLen = fl.substr(0, fl.find_first_of('='));
-    //int l = stoi(tLen);
-    /*int start = binToDec(Dcd(fl.substr(fl.find_first_of('=') + 1, l)));
-    int init = tLen.length() + 1 + l;
-
-    string _tree = fl.substr(init, start);
-    init += start;
-
-    string codes = fl.substr(init, fl.length());
-
-    tree->mapTree(_tree);
-
-    const int size = tree->len();
-    string decoded = Dcd(codes), temp = "";
-    fl = "";
-
-    hf = tree->huffman();
-
-    for (char s : decoded)
-    {
-        temp.push_back(s);
-        for (int i = 0; i < size; i++)
-            if (hf[i].coded() == temp)
-            {
-                fl.push_back(hf[i].getSymbol());
-                temp = "";
-                break;
-            }
-    }
-
-    writeFile(path, fl);
-    cout << "**Completed**" << endl;*/
+    start = 0;
+    readHead();
+    string filePath = path.substr(0, path.find_last_of(".")) + file_extension;
+    ofstream out(filePath, ios::out | ios::binary);
+    readBody(out);
 }
 
 void CMPDCP::createHuffmanTree()
@@ -144,71 +75,42 @@ void CMPDCP::createHuffmanTree()
         ls->remove(min2);
     }
 
-    hf = ls->last().retrieve()->huffman(size, _canonize);
+    hf = ls->last().retrieve()->huffman(size, false);
 }
 
-void CMPDCP::canonizeHuffman()
-{
-    int current = 0, pbl = hf[0]._len();
-
-    for (int i = 0; i < size; i++)
-    {
-        int shift_bits = hf[i]._len() - pbl;
-        current = current << shift_bits;
-        hf[i].canonicalCodes(binary_string(current, hf[i]._len()));
-        ++current;
-        pbl = hf[i]._len();
-    }
-}
-
-string CMPDCP::binary_string(int n, int bit_size)
+string CMPDCP::binary_string(int n)
 {
     string st = "", res = "";
-    if (!n)
-        st += "0";
     while (n > 0)
     {
         n % 2 ? st += "1" : st += "0";
         n /= 2;
     }
+    appendBits(st);
     reverse(st.begin(), st.end());
-    return st;
+    for (int i = 0; i < st.length(); i += 8)
+        res += char(binToDec((st.substr(i, 8))));
+    return res;
 }
-void CMPDCP::writeHead(ofstream &out, string ext)
+void CMPDCP::writeHead(ofstream &out)
 {
+
+    string tree = ls->last().retrieve()->getTree();
+    string encoded_tree_len = binary_string(tree.size());
+    uint8_t tree_len = (uint8_t)encoded_tree_len.size();
+    out.write((char *)&tree_len, 1);
+
+    out << encoded_tree_len;
+    for (auto it : tree)
+        out.write(&it, 1);
 
     uint8_t max_len = (uint8_t)hf[size - 1]._len();
     out.write((char *)&max_len, 1);
 
-    unsigned long search_I = 0;
-    for (int i = 1; i <= max_len; i++)
-    {
-        uint8_t _count = 0;
-        while (search_I < size)
-        {
-            if (i == hf[search_I]._len())
-            {
-                _count++;
-                search_I++;
-            }
-            else
-                break;
-        }
-        out.write((char *)&_count, 1);
-    }
-
-    uint8_t num_of_chars = (uint8_t)size;
-    out.write((char *)&num_of_chars, 1);
-    for (int i = 0; i < size; i++)
-    {
-        char c = hf[i].getSymbol();
-        out.write(&c, 1);
-    }
-
-    ext.size() == path.size() ? ext = "" : ext = ext;
-    uint8_t size_of_ext = (uint8_t)ext.size();
+    file_extension.size() == path.size() ? file_extension = "" : file_extension;
+    uint8_t size_of_ext = (uint8_t)file_extension.size();
     out.write((char *)&size_of_ext, 1);
-    out << ext;
+    out << file_extension;
 }
 
 void CMPDCP::writeBody(ofstream &out)
@@ -217,9 +119,9 @@ void CMPDCP::writeBody(ofstream &out)
     for (const char s : fl)
     {
         int index = findChar(s);
-        for (int i = 0; i < hf[index]._len(); i++)
+        for (int i = 0; i < hf[index].coded().size(); i++)
         {
-            if (bits.length() == 8)
+            if (bits.size() == 8)
             {
                 char c = binToDec(bits);
                 out.write(&c, 1);
@@ -228,53 +130,66 @@ void CMPDCP::writeBody(ofstream &out)
             bits += hf[index].coded()[i];
         }
     }
-    appendBits(bits, out);
+    appendBits(bits);
+    char c = binToDec(bits);
+    out.write(&c, 1);
     out.flush();
     return;
 }
 void CMPDCP::readHead()
 {
-    cout << fl << endl;
 
-    char max_len = fl[start];
-    string _length = fl.substr(1, max_len);
+    char tree_len = fl[start];
+    string _length = fl.substr(1, tree_len);
 
-    char num_of_chars = fl[max_len + 1];
-    string symbols = fl.substr(max_len + 2, num_of_chars);
+    char tree_size = binToDec(Dcd(_length));
+    string _tree = fl.substr(1 + _length.size(), tree_size);
 
-    char size_of_ext = fl[max_len + 2 + num_of_chars];
-    string ext = fl.substr(max_len + 2 + num_of_chars + 1, size_of_ext);
+    char size_of_ext = fl[tree_size + 2 + _length.size()];
+    file_extension = fl.substr(tree_size + 3 + _length.size(), size_of_ext);
 
-    start = max_len + num_of_chars + size_of_ext + 3;
-    int symbolsIndex = 0;
+    start = tree_size + 3 + _length.size() + size_of_ext;
+    cout << fl << ":" << fl.substr(start) << endl;
 
-    int currCode = 0;
-
-    int previousCode = -1;
-    int previousLength = 0;
-    tree->createRoot();
-    for (int i = 0; i < (int)_length.size(); i++)
-    {
-        char n = _length[i];
-        if (n)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                char c = symbols[symbolsIndex];
-
-                currCode = (previousCode + 1) << (i - previousLength);
-                tree->canonized(binary_string(currCode, i + 1), c);
-                symbolsIndex++;
-                previousCode = currCode;
-                previousLength = i;
-            }
-        }
-    }
+    tree->mapTree(_tree);
 }
-void CMPDCP::readBody()
+void CMPDCP::readBody(ofstream &out)
 {
-    tree->print();
-    cout << fl.substr(start) << endl;
+    int parsedBits = 8;
+    tree->_rcurrentNode();
+    for (auto it : fl.substr(start))
+    {
+        std::bitset<8> b(it);
+        bits += b.to_string();
+        for (int i = 8 - parsedBits; i < 8; i++)
+        {
+            if (tree->atLeaf())
+            {
+                //out << tree->currentNode->element.symbol;
+                cout << tree->currentNode->element.symbol;
+                parsedBits = i;
+                tree->_rcurrentNode();
+            }
+            if (bits[i] == '1')
+                tree->currentNode = tree->currentNode->right;
+            else
+                tree->currentNode = tree->currentNode->left;
+        }
+        bits = bits.substr(parsedBits);
+    }
+    cout << "\n"
+         << bits << endl;
+    out.close();
+}
+string CMPDCP::Dcd(string c)
+{
+    string decoded = "";
+    for (auto it : c)
+    {
+        std::bitset<8> b(it);
+        decoded += b.to_string();
+    }
+    return decoded;
 }
 
 int CMPDCP::findChar(char s)
@@ -299,15 +214,13 @@ int CMPDCP::_pow(int c, int base)
         return 1;
     return base * _pow(c - 1);
 }
-void CMPDCP::appendBits(string bits, ofstream &out)
+string CMPDCP::appendBits(string &bits)
 {
     int mod = bits.length() % 8;
-    if (!mod)
-        return;
-    for (int i = mod; i < 8; i++)
-        bits += "0";
-    char c = binToDec(bits);
-    out.write(&c, 1);
+    if (mod)
+        for (int i = mod; i < 8; i++)
+            bits += "0";
+    return bits;
 }
 string CMPDCP::readFile(string path)
 {
@@ -321,5 +234,6 @@ string CMPDCP::readFile(string path)
         out.append(buf, 0, stream.gcount());
     }
     out.append(buf, 0, stream.gcount());
+    stream.close();
     return out;
 }

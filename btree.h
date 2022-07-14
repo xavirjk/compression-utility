@@ -40,8 +40,11 @@ public:
     void createRoot();
     bool _getSymbol(string _code);
     int len() const;
+    bool atLeaf() const;
+    void _rcurrentNode();
 
     const BTree &operator=(const BTree &rhs);
+    BinaryNode<Comparable> *currentNode;
 
 private:
     BinaryNode<Comparable> *root;

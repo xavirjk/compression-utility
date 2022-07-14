@@ -373,7 +373,8 @@ void BTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
 template <class Comparable>
 void BTree<Comparable>::canonized(string path, char c)
 {
-    if (!path[0])
+    cout << path << " " << c << endl;
+    if (path[0] == '0')
         canonizeChildren(root->left, path, c);
     else
         canonizeChildren(root->right, path, c);
@@ -388,7 +389,7 @@ void BTree<Comparable>::canonizeChildren(BinaryNode<Comparable> *&t, string code
     }
     if (t == nullptr)
         insert(getInfo(), t);
-    if (!code[i])
+    if (code[i] == '0')
         canonizeChildren(t->left, code, _c, ++i);
     else
         canonizeChildren(t->right, code, _c, ++i);
@@ -400,12 +401,17 @@ void BTree<Comparable>::createRoot()
     if (!root)
         insert(getInfo());
 }
-
 template <class Comparable>
-int BTree<Comparable>::len() const
+bool BTree<Comparable>::atLeaf() const
 {
-    return size;
+    if (!currentNode->left && !currentNode->right)
+        return true;
+    return false;
 }
+template <class Comparable>
+void BTree<Comparable>::_rcurrentNode() { currentNode = root; }
+template <class Comparable>
+int BTree<Comparable>::len() const { return size; }
 template <class Comparable>
 string BTree<Comparable>::getCode(char ch)
 {

@@ -159,3 +159,179 @@ void writeFile(string path, string data)
             temp = "";
         }
     }*/
+
+/*string CMPDCP::Dcd(char c)
+{
+    string decoded = "";
+    std::bitset<8> b(c);
+    decoded.append(b.to_string());
+    return decoded;
+}*/
+/*tree->print();
+    cout << fl.substr(start) << endl;*/
+/*ls->printList(*ls);
+    if (canonize)
+    {
+        HeapSort *hp = new HeapSort();
+
+        hp->heapSort(hf, size);
+        for (int i = 0; i < size; i++)
+        {
+            int k;
+
+            if (size == i + 1 || hf[i]._len() != hf[i + 1]._len())
+                continue;
+
+            for (k = i + 1; k < size; k++)
+                if (hf[k]._len() != hf[i]._len())
+                    break;
+
+            hp->heapSort(hf, k - i, true, i);
+
+            i += k - i - 1;
+        }
+        canonizeHuffman();
+        cout << "canonized" << endl;
+        string newPath = path.substr(0, path.find_last_of(".")) + ".cnz";
+        ofstream out(newPath, ios::out | ios::binary);
+        file_extension = path.substr(path.find_last_of("."));
+        writeHead(out);
+        writeBody(out);
+    }*/
+/*void CMPDCP::canonizeHuffman()
+{
+    int previousLength = 0;
+    int currVal = 0;
+    int canonicalLength = 0;
+    for (int i = 0; i < size; i++)
+    {
+        char c = hf[i].getSymbol();
+    }
+    for (auto &it : codeLengthMap)
+    {
+
+        set<char> *charSet = it.second;
+        canonicalLength += (it.first - previousLength);
+        currVal = (currVal) << (it.first - previousLength);
+        for (auto c : *charSet)
+        {
+            std::cout << c << ":" << canonicalLength << ":" << currVal << std::endl;
+            canonicalCodeMap.insert({c, pair<int, int>{canonicalLength, currVal}});
+            currVal += 1;
+        }
+        previousLength = it.first;
+    }
+    return canonicalCodeMap;
+    int current = 0, pbl = hf[0]._len();
+
+    for (int i = 0; i < size; i++)
+    {
+        int shift_bits = hf[i]._len() - pbl;
+        current = current << shift_bits;
+        //cout << hf[i].getSymbol() << ":" << current << endl;
+        hf[i].canonicalCodes(binary_string(current, hf[i]._len()));
+        ++current;
+        pbl = hf[i]._len();
+    }
+}*/
+/*
+    for (const char s : fl)
+        for (int i = 0; i < size; i++)
+            if (hf[i].findSymbol(s))
+            {
+                bits.append(hf[i].coded());
+                break;
+            }*/
+//appendBits(bits);
+//string newPath = path.substr(0, path.find_last_of(".")) + ".huf";
+//toByte(ls->last().retrieve()->getTree(), bits, newPath);
+/*if (fileType == "cnz")
+    {
+        start = 0;
+        readHead();
+        //filePath = path.substr(0, path.find_last_of(".")) + file_extension;
+        filePath = "E:\\qt-rec\\413_test\\gf.txt";
+        ofstream out(filePath, ios::out | ios::binary);
+        readBody(out);
+        cout << endl;
+        //tree->print();
+        cout << "**completed**" << endl;
+    }*/
+//out.close();
+/*bits = "";
+    string decoded = "";
+    int parsedBits = 8;
+    tree->_rcurrentNode();
+    for (char it : fl.substr(start))
+    {
+        std::bitset<8> b(it);
+        decoded += b.to_string();
+    }
+    tree->print();
+    cout << endl;
+    cout << decoded << endl;
+    for (char s : decoded)
+    {
+        if (tree->atLeaf())
+        {
+            cout << tree->currentNode->element.symbol;
+            tree->_rcurrentNode();
+        }
+        if (s == '1')
+            tree->currentNode = tree->currentNode->right;
+        else
+            tree->currentNode = tree->currentNode->left;
+    }*/
+/*for (auto it : fl.substr(start))
+    {
+        std::bitset<8> b(it);
+        bits += b.to_string();
+        cout << bits;
+        for (int i = 8 - parsedBits; i < 8; i++)
+        {
+            if (tree->atLeaf())
+            {
+                out << tree->currentNode->element.symbol;
+                parsedBits = i;
+                tree->_rcurrentNode();
+            }
+            if (bits[i] == '1')
+                tree->currentNode = tree->currentNode->right;
+            else
+                tree->currentNode = tree->currentNode->left;
+        }
+        bits = bits.substr(parsedBits);
+    }*/
+//out.close();
+//const string tLen = fl.substr(0, fl.find_first_of('='));
+//int l = stoi(tLen);
+/*int start = binToDec(Dcd(fl.substr(fl.find_first_of('=') + 1, l)));
+    int init = tLen.length() + 1 + l;
+
+    string _tree = fl.substr(init, start);
+    init += start;
+
+    string codes = fl.substr(init, fl.length());
+
+    tree->mapTree(_tree);
+
+    const int size = tree->len();
+    string decoded = Dcd(codes), temp = "";
+    fl = "";
+
+    hf = tree->huffman();
+
+    for (char s : decoded)
+    {
+        temp.push_back(s);
+        for (int i = 0; i < size; i++)
+            if (hf[i].coded() == temp)
+            {
+                fl.push_back(hf[i].getSymbol());
+                temp = "";
+                break;
+            }
+    }
+
+    writeFile(path, fl);
+    cout << "**Completed**" << endl;*/

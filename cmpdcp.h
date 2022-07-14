@@ -10,14 +10,14 @@ class HCAPI CMPDCP
 public:
     CMPDCP(const string &fn = string());
     ~CMPDCP();
-    void compression(bool canonize = true);
-    void decompression(string fileType);
+    void compression();
+    void decompression();
 
 private:
     const char ch = 'T';
     const string path;
     int t, size, start;
-    string fl, bits;
+    string fl, bits, file_extension;
     List<BTree<Fileinfo<int>>> *ls;
     BTree<Fileinfo<int>> *tree;
     Huffman *hf;
@@ -26,15 +26,16 @@ private:
 
     void createHuffmanTree();
     void canonizeHuffman();
-    void writeHead(ofstream &out, string ext);
+    void writeHead(ofstream &out);
     void writeBody(ofstream &out);
     int findChar(char s);
     int binToDec(string str);
     int _pow(int c, int base = 2);
-    void appendBits(string bits, ofstream &out);
+    string appendBits(string &bits);
     string readFile(string path);
     void readHead();
-    void readBody();
-    string binary_string(int n, int bit_size);
+    void readBody(ofstream &out);
+    string binary_string(int n);
+    string Dcd(string ec);
 };
 #endif //CMPDCP_H_
