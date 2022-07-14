@@ -12,7 +12,6 @@ void Huffman::print() const
 
 void Huffman::setData(const char &s, const string &c, bool canonical)
 {
-    cout << s << ":" << c << endl;
     symbol = s;
     if (canonical)
         len = c.length();

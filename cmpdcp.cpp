@@ -1,9 +1,6 @@
 #include "cmpdcp.h"
-#include "sort.h"
 #include "bits/stdc++.h"
 #include <bitset>
-#include <sstream>
-using namespace MP::sort;
 CMPDCP::CMPDCP(const string &fn) : path(fn)
 {
     ls = new List<BTree<Fileinfo<int>>>();
@@ -33,9 +30,11 @@ void CMPDCP::compression()
     file_extension = path.substr(path.find_last_of("."));
     writeHead(out);
     writeBody(out);
+    cout << "**finished compression**" << endl;
 }
 void CMPDCP::decompression()
 {
+    cout << "**init decompression**" << endl;
     tree = new BTree<Fileinfo<int>>(Fileinfo<int>(ch, t));
     fl = readFile(path);
     start = 0;
@@ -43,6 +42,7 @@ void CMPDCP::decompression()
     string filePath = path.substr(0, path.find_last_of(".")) + file_extension;
     ofstream out(filePath, ios::out | ios::binary);
     readBody(out);
+    cout << "**completed**" << endl;
 }
 
 void CMPDCP::createHuffmanTree()
@@ -138,47 +138,43 @@ void CMPDCP::writeBody(ofstream &out)
 }
 void CMPDCP::readHead()
 {
-
     char tree_len = fl[start];
     string _length = fl.substr(1, tree_len);
 
-    char tree_size = binToDec(Dcd(_length));
+    int tree_size = binToDec(Dcd(_length));
     string _tree = fl.substr(1 + _length.size(), tree_size);
 
     char size_of_ext = fl[tree_size + 2 + _length.size()];
     file_extension = fl.substr(tree_size + 3 + _length.size(), size_of_ext);
 
     start = tree_size + 3 + _length.size() + size_of_ext;
-    cout << fl << ":" << fl.substr(start) << endl;
-
     tree->mapTree(_tree);
 }
 void CMPDCP::readBody(ofstream &out)
 {
-    int parsedBits = 8;
     tree->_rcurrentNode();
     for (auto it : fl.substr(start))
     {
         std::bitset<8> b(it);
-        bits += b.to_string();
-        for (int i = 8 - parsedBits; i < 8; i++)
+        int bitcount = 0;
+        while (bitcount < 8)
         {
             if (tree->atLeaf())
             {
-                //out << tree->currentNode->element.symbol;
-                cout << tree->currentNode->element.symbol;
-                parsedBits = i;
+                out << tree->currentNode->element.symbol;
                 tree->_rcurrentNode();
+                bits = "";
+                bits += b.to_string()[bitcount];
             }
-            if (bits[i] == '1')
+            else
+                bits += b.to_string()[bitcount];
+            if (bits.back() == '1')
                 tree->currentNode = tree->currentNode->right;
             else
                 tree->currentNode = tree->currentNode->left;
+            bitcount++;
         }
-        bits = bits.substr(parsedBits);
     }
-    cout << "\n"
-         << bits << endl;
     out.close();
 }
 string CMPDCP::Dcd(string c)
