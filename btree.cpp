@@ -1,22 +1,51 @@
 #include "btree.h"
 template <class Comparable>
-BTree<Comparable>::BTree(const Comparable &notFound) : ITEM_NOT_FOUND(notFound)
-{
-    root = nullptr;
+BTree<Comparable>::BTree() { root = nullptr; }
+
+template <class Comparable>
+BTree<Comparable>::BTree(const BTree &rhs) { root = rhs.root; }
+
+template <class Comparable>
+BTree<Comparable>::~BTree()
+{ /*makeEmpty();*/
 }
 
 template <class Comparable>
-BTree<Comparable>::BTree(const BTree &rhs) : ITEM_NOT_FOUND(rhs.ITEM_NOT_FOUND)
-{
-    root = rhs.root;
-}
+bool BTree<Comparable>::isEmpty() const { return root == nullptr; }
+
+template <class Comparable>
+void BTree<Comparable>::insert(const Fileinfo<int> &f) { insert(f, root); }
+
+template <class Comparable>
+void BTree<Comparable>::insertLeft(const BTree &rhs) { root->left = rhs.root; }
+
+template <class Comparable>
+void BTree<Comparable>::insertRight(const BTree &rhs) { root->right = rhs.root; }
+
+template <class Comparable>
+int BTree<Comparable>::getFrequency() const { return this->root->element.frequency; }
+
+template <class Comparable>
+void BTree<Comparable>::flag() { this->root->element.flag = true; }
+
+template <class Comparable>
+bool BTree<Comparable>::flagged() const { return this->root->element.flag; }
+
+template <class Comparable>
+char BTree<Comparable>::_symbol() const { return c; }
+
+template <class Comparable>
+void BTree<Comparable>::_rcurrentNode() { currentNode = root; }
+
+template <class Comparable>
+int BTree<Comparable>::len() const { return size; }
 
 template <class Comparable>
 const BTree<Comparable> &BTree<Comparable>::operator=(const BTree<Comparable> &rhs)
 {
     if (this != &rhs)
     {
-        makeEmpty();
+        //makeEmpty();
         root = clone(rhs.root);
     }
     return *this;
@@ -32,98 +61,14 @@ BinaryNode<Comparable> *BTree<Comparable>::clone(BinaryNode<Comparable> *t) cons
 }
 
 template <class Comparable>
-BTree<Comparable>::~BTree()
+bool BTree<Comparable>::smp(char st)
 {
-    makeEmpty();
+    return root->element.symbol == st;
 }
-
 template <class Comparable>
 bool BTree<Comparable>::findSymbol(char ch) const
 {
-    if (!root)
-        return false;
-    if (hasSymbol(root, ch))
-        return true;
-    else if (hasSymbol(root->left, ch))
-        return true;
-    return hasSymbol(root->right, ch);
-}
-
-template <class Comparable>
-bool BTree<Comparable>::hasSymbol(BinaryNode<Comparable> *t, char ch) const
-{
-    if (!t)
-        return false;
-    else if (t->element.symbol == ch)
-        return true;
-    else
-    {
-        if (hasSymbol(t->left, ch))
-            return true;
-        return hasSymbol(t->right, ch);
-    }
-}
-
-template <class Comparable>
-const Comparable &BTree<Comparable>::find(const Fileinfo<int> &f) const
-{
-    return elementAt(find(f, root));
-}
-
-template <class Comparable>
-const Comparable &BTree<Comparable>::elementAt(BinaryNode<Comparable> *t) const
-{
-    return t == nullptr ? ITEM_NOT_FOUND : t->element;
-}
-
-template <class Comparable>
-BinaryNode<Comparable> *BTree<Comparable>::find(const Fileinfo<int> &f, BinaryNode<Comparable> *t) const
-{
-    if (t == nullptr)
-        return nullptr;
-    else if (f.frequency < t->element.frequency)
-        return find(f, t->left);
-    else if (t->element.frequency < f.frequency)
-        return find(f, t->right);
-    else
-        return t; //Match
-}
-
-template <class Comparable>
-BinaryNode<Comparable> *BTree<Comparable>::findMin(BinaryNode<Comparable> *t) const
-{ //Recursive implementation
-    if (t == nullptr)
-        return nullptr;
-    if (t->left == nullptr)
-        return t;
-    return findMin(t->left);
-}
-
-template <class Comparable>
-const Comparable &BTree<Comparable>::findMin() const
-{
-    return findMin(root)->element;
-}
-
-template <class Comparable>
-BinaryNode<Comparable> *BTree<Comparable>::findMax(BinaryNode<Comparable> *t) const
-{ //Non recursive implementation
-    if (t != nullptr)
-        while (t->right != nullptr)
-            t = t->right;
-    return t;
-}
-
-template <class Comparable>
-const Comparable &BTree<Comparable>::findMax() const
-{
-    return findMax(root)->element;
-}
-
-template <class Comparable>
-bool BTree<Comparable>::isEmpty() const
-{
-    return root == nullptr;
+    return root->element.symbol == ch;
 }
 
 template <class Comparable>
@@ -162,77 +107,13 @@ void BTree<Comparable>::insert(const Fileinfo<int> &f, BinaryNode<Comparable> *&
 }
 
 template <class Comparable>
-void BTree<Comparable>::insert(const Fileinfo<int> &f)
-{
-    insert(f, root);
-}
-
-template <class Comparable>
-void BTree<Comparable>::insertLeft(const BTree *rhs)
-{
-    root->left = rhs->root;
-}
-
-template <class Comparable>
-void BTree<Comparable>::insertRight(const BTree *rhs)
-{
-    root->right = rhs->root;
-}
-
-template <class Comparable>
-void BTree<Comparable>::remove(const Fileinfo<int> &f, BinaryNode<Comparable> *&t) const
-{
-    if (t == nullptr)
-        return;
-    if (f.frequency < t->element.frequency)
-        remove(f, t->left);
-    else if (t->element.frequency < f.frequency)
-        remove(f, t->right);
-    else if (t->left != nullptr && t->right != nullptr)
-    {
-        t->element = findMin(t->right)->element;
-        remove(f, t->right);
-    }
-    else
-    {
-        BinaryNode<Comparable> *oldNode = t;
-        t = t->left != nullptr ? t->left : t->right;
-        delete oldNode;
-    }
-}
-
-template <class Comparable>
-void BTree<Comparable>::remove(const Fileinfo<int> &f)
-{
-    remove(f, root);
-}
-
-template <class Comparable>
-void BTree<Comparable>::makeEmpty(BinaryNode<Comparable> *&t) const
-{
-    if (t != nullptr)
-    {
-        makeEmpty(t->left);
-        makeEmpty(t->right);
-        delete t;
-    }
-    t = nullptr;
-}
-
-template <class Comparable>
-void BTree<Comparable>::makeEmpty()
-{
-    makeEmpty(root);
-}
-
-template <class Comparable>
 void BTree<Comparable>::preOrder(BinaryNode<Comparable> *t) const
 {
     if (t == nullptr)
         return;
     else
     {
-        cout << t->element.symbol << ":" << t->element.frequency << " ";
+        std::cout << t->element.symbol << ":" << t->element.frequency << " ";
         preOrder(t->left);
         preOrder(t->right);
     }
@@ -243,33 +124,14 @@ void BTree<Comparable>::print() const
 {
     if (!root)
         return;
-    cout << root->element.symbol << ":" << root->element.frequency << " ";
+    std::cout << root->element.symbol << ":" << root->element.frequency << " ";
     preOrder(root->left);
     preOrder(root->right);
 }
 
 template <class Comparable>
-int BTree<Comparable>::getFrequency() const
+Huffman *BTree<Comparable>::huffman(const int s)
 {
-    return this->root->element.frequency;
-}
-
-template <class Comparable>
-void BTree<Comparable>::flag()
-{
-    this->root->element.flag = true;
-}
-
-template <class Comparable>
-bool BTree<Comparable>::flagged() const
-{
-    return this->root->element.flag;
-}
-
-template <class Comparable>
-Huffman *BTree<Comparable>::huffman(const int s, bool canonize)
-{
-    canonical_flag = canonize;
     s ? size = s : true;
     Scode = "";
     count = 0;
@@ -288,7 +150,7 @@ void BTree<Comparable>::recordWeights(BinaryNode<Comparable> *t)
 {
     if (!t->left && !t->right)
     {
-        hf[count].setData(t->element.symbol, Scode, canonical_flag);
+        hf[count].setData(t->element.symbol, Scode);
         t->element.code = Scode;
         count++;
         return;
@@ -317,7 +179,7 @@ void BTree<Comparable>::_switch()
     Scode.append("1");
 }
 template <class Comparable>
-string BTree<Comparable>::getTree()
+std::string BTree<Comparable>::getTree()
 {
     Scode = "";
     if (root)
@@ -334,7 +196,7 @@ void BTree<Comparable>::appendToTree(BinaryNode<Comparable> *t)
 {
     if (!t->left && !t->right)
     {
-        Scode.append("1" + string(1, t->element.symbol));
+        Scode.append("1" + std::string(1, t->element.symbol));
         return;
     }
     Scode.append("0");
@@ -343,7 +205,7 @@ void BTree<Comparable>::appendToTree(BinaryNode<Comparable> *t)
 }
 
 template <class Comparable>
-void BTree<Comparable>::mapTree(string tree)
+void BTree<Comparable>::mapTree(std::string tree)
 {
     Scode = tree;
     insert(getInfo());
@@ -371,74 +233,15 @@ void BTree<Comparable>::mapToChildren(BinaryNode<Comparable> *&t)
 }
 
 template <class Comparable>
-void BTree<Comparable>::canonized(string path, char c)
-{
-    cout << path << " " << c << endl;
-    if (path[0] == '0')
-        canonizeChildren(root->left, path, c);
-    else
-        canonizeChildren(root->right, path, c);
-}
-template <class Comparable>
-void BTree<Comparable>::canonizeChildren(BinaryNode<Comparable> *&t, string code, char _c, int i)
-{
-    if (code.length() == i)
-    {
-        insert(getInfo(_c), t);
-        return;
-    }
-    if (t == nullptr)
-        insert(getInfo(), t);
-    if (code[i] == '0')
-        canonizeChildren(t->left, code, _c, ++i);
-    else
-        canonizeChildren(t->right, code, _c, ++i);
-}
-
-template <class Comparable>
-void BTree<Comparable>::createRoot()
-{
-    if (!root)
-        insert(getInfo());
-}
-template <class Comparable>
 bool BTree<Comparable>::atLeaf() const
 {
     if (!currentNode->left && !currentNode->right)
         return true;
     return false;
 }
-template <class Comparable>
-void BTree<Comparable>::_rcurrentNode() { currentNode = root; }
-template <class Comparable>
-int BTree<Comparable>::len() const { return size; }
-template <class Comparable>
-string BTree<Comparable>::getCode(char ch)
-{
-    if (!returnCode(root->left, ch))
-        returnCode(root->right, ch);
-    return Scode;
-}
 
 template <class Comparable>
-bool BTree<Comparable>::returnCode(BinaryNode<Comparable> *t, char ch)
-{
-    if (!t->left && !t->right)
-    {
-        if (t->element.symbol == ch)
-        {
-            Scode = t->element.code;
-            return true;
-        }
-        return false;
-    }
-    if (returnCode(t->left, ch))
-        return true;
-    return returnCode(t->right, ch);
-}
-
-template <class Comparable>
-bool BTree<Comparable>::_getSymbol(string _c)
+bool BTree<Comparable>::_getSymbol(std::string _c)
 {
     c = char();
     symbolFound = false;
@@ -448,7 +251,7 @@ bool BTree<Comparable>::_getSymbol(string _c)
 }
 
 template <class Comparable>
-bool BTree<Comparable>::returnSymbol(BinaryNode<Comparable> *t, string code)
+bool BTree<Comparable>::returnSymbol(BinaryNode<Comparable> *t, std::string code)
 {
     if (!t->left && !t->right)
     {
@@ -465,9 +268,4 @@ bool BTree<Comparable>::returnSymbol(BinaryNode<Comparable> *t, string code)
     return returnSymbol(t->right, code);
 }
 
-template <class Comparable>
-char BTree<Comparable>::_symbol() const
-{
-    return c;
-}
 template class BTree<Fileinfo<int>>;

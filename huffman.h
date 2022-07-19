@@ -1,32 +1,24 @@
 #ifndef HUFFMAN_H_
 #define HUFFMAN_H_
 
-#include "string"
-#include "entity.h"
+#include <string>
 #include <iostream>
-using namespace std;
-class Huffman : public Entity
+class Huffman
 {
 public:
-    Huffman(const string &code = string(), const char &symbol = char());
+    Huffman(const std::string &code = std::string(), const char &symbol = char());
     ~Huffman();
 
-    int getFrequency() const override;
-    void flag() override;
-    bool flagged() const override;
-    bool findSymbol(char ch) const override;
-    void print() const override;
-    string coded() const;
+    bool findSymbol(char ch) const;
+    void print() const;
+    std::string coded() const;
     char getSymbol() const;
-    int _len() const;
 
-    void setData(const char &s = char(), const string &c = string(), bool canonical = true);
-    void canonicalCodes(const string &c = string());
+    void setData(const char &s = char(), const std::string &c = std::string());
 
 private:
-    string code;
+    std::string code;
     char symbol;
-    int len;
 };
 
 #endif //HUFFMAN_H_

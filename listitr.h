@@ -17,7 +17,7 @@ public:
         if (!isPastEnd())
             current = current->next;
     }
-    Object *retrieve() const
+    Object &retrieve() const
     {
         if (isPastEnd())
             throw -1;

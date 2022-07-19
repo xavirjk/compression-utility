@@ -11,10 +11,14 @@ template <class Object>
 class ListNode
 {
 public:
-    ListNode(Object *theElement = nullptr, ListNode *n = nullptr, ListNode *p = nullptr) : element(theElement), next(n), previous(p){};
+    ListNode(){};
+    ListNode(Object &theElement, ListNode *n = nullptr, ListNode *p = nullptr) : next(n), previous(p)
+    {
+        element = theElement;
+    };
     ~ListNode(){};
 
-    Object *element;
+    Object element;
     ListNode *next;
     ListNode *previous;
     friend class List<Object>;

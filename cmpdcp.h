@@ -3,39 +3,39 @@
 
 #include "cmpdcp_lib_global.h"
 #include "list.h"
-#include <string>
 #include <fstream>
+#include <windows.h>
 class HCAPI CMPDCP
 {
 public:
-    CMPDCP(const string &fn = string());
+    CMPDCP(const std::string &fn = std::string());
     ~CMPDCP();
     void compression();
     void decompression();
+    void cleanUp();
+    LPCSTR statusMessage = "";
 
 private:
     const char ch = 'T';
-    const string path;
+    const std::string path;
     int t, size, start;
-    string fl, bits, file_extension;
+    std::string fl, bits, file_extension;
     List<BTree<Fileinfo<int>>> *ls;
     BTree<Fileinfo<int>> *tree;
     Huffman *hf;
 
-    bool _canonize = true;
-
     void createHuffmanTree();
     void canonizeHuffman();
-    void writeHead(ofstream &out);
-    void writeBody(ofstream &out);
+    void writeHead(std::ofstream &out);
+    void writeBody(std::ofstream &out);
     int findChar(char s);
-    int binToDec(string str);
+    int binToDec(std::string str);
     int _pow(int c, int base = 2);
-    string appendBits(string &bits);
-    string readFile(string path);
+    std::string appendBits(std::string &bits);
+    void readFile(std::string path);
     void readHead();
-    void readBody(ofstream &out);
-    string binary_string(int n);
-    string Dcd(string ec);
+    void readBody(std::ofstream &out);
+    std::string binary_string(int n);
+    std::string Dcd(std::string ec);
 };
 #endif //CMPDCP_H_

@@ -1,35 +1,21 @@
 #include "huffman.h"
-Huffman::Huffman(const string &code, const char &symbol) : code(code), symbol(symbol){};
-Huffman::~Huffman(){};
-int Huffman::getFrequency() const { return 1; }
-bool Huffman::flagged() const { return false; }
-void Huffman::flag() {}
-bool Huffman::findSymbol(char ch) const { return ch == symbol; }
-void Huffman::print() const
-{
-    cout << symbol << " " << code << endl;
-}
+Huffman::Huffman(const std::string &code, const char &symbol) : code(code), symbol(symbol){};
 
-void Huffman::setData(const char &s, const string &c, bool canonical)
+Huffman::~Huffman(){};
+
+bool Huffman::findSymbol(char ch) const { return ch == symbol; }
+
+void Huffman::print() const { std::cout << symbol << " " << code << std::endl; }
+
+void Huffman::setData(const char &s, const std::string &c)
 {
     symbol = s;
-    if (canonical)
-        len = c.length();
-    else
-        code = c;
+    code = c;
 }
 
-string Huffman::coded() const
+std::string Huffman::coded() const
 {
     return code;
 }
 
-char Huffman::getSymbol() const
-{
-    return symbol;
-}
-int Huffman::_len() const
-{
-    return len;
-}
-void Huffman::canonicalCodes(const string &c) { code = c; }
+char Huffman::getSymbol() const { return symbol; }

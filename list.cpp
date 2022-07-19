@@ -22,7 +22,7 @@ const List<Object> &List<Object>::operator=(const List &rhs)
         ListItr<Object> ritr = rhs.first();
         ListItr<Object> itr = zeroth();
         for (; !ritr.isPastEnd(); ritr.advance(), itr.advance())
-            insert(ritr.retrieve(), itr);
+            inset(ritr.retrieve(), itr);
     }
     return *this;
 }
@@ -49,17 +49,17 @@ ListItr<Object> List<Object>::findMin() const
 {
     ListNode<Object> *itr = header->next;
     ListNode<Object> *min;
-    if (itr->element->flagged())
+    if (itr->element.flagged())
         min = itr->next;
     else
         min = itr;
     while (itr != nullptr)
     {
-        if (!itr->element->flagged() && itr->element->getFrequency() < min->element->getFrequency())
+        if (!itr->element.flagged() && itr->element.getFrequency() < min->element.getFrequency())
             min = itr;
         itr = itr->next;
     }
-    min->element->flag();
+    min->element.flag();
     return ListItr<Object>(min);
 }
 
@@ -68,6 +68,7 @@ ListItr<Object> List<Object>::last() const
 {
     if (isEmpty())
         return zeroth();
+
     ListItr<Object> itr = first();
     ListItr<Object> ls;
     for (; !itr.isPastEnd(); itr.advance())
@@ -87,38 +88,19 @@ const int List<Object>::size() const
 }
 
 template <class Object>
-ListItr<Object> List<Object>::find(Object *x) const
-{
-    ListNode<Object> *itr = header->next;
-    while (itr != nullptr && itr->element != x)
-        itr = itr->next;
-    return ListItr<Object>(itr);
-}
-
-template <class Object>
 bool List<Object>::findSymbol(const char &ch) const
 {
     ListNode<Object> *itr = header->next;
     while (itr != nullptr)
     {
-        if (itr->element->findSymbol(ch))
+
+        if (itr->element.smp(ch))
             return true;
         itr = itr->next;
     }
     return false;
 }
 
-template <class Object>
-void List<Object>::remove(Object *x)
-{
-    ListItr<Object> p = findPrevious(x);
-    if (p.current->next != nullptr)
-    {
-        ListNode<Object> *oldNode = p.current->next;
-        p.current->next = p.current->next->next;
-        delete oldNode;
-    }
-}
 template <class Object>
 void List<Object>::remove(const ListItr<Object> &p)
 {
@@ -133,40 +115,31 @@ void List<Object>::remove(const ListItr<Object> &p)
 }
 
 template <class Object>
-ListItr<Object> List<Object>::findPrevious(Object *x) const
-{
-    ListNode<Object> *itr = header;
-    while (itr->next != nullptr && itr->next->element != x)
-        itr = itr->next;
-    return ListItr<Object>(itr);
-}
-
-template <class Object>
-void List<Object>::insert(Object *x, const ListItr<Object> &p)
+void List<Object>::inset(Object &x, const ListItr<Object> &p)
 {
     if (p.current != nullptr)
         p.current->next = new ListNode<Object>(x, p.current->next, p.current);
 }
 
 template <class Object>
-void List<Object>::printList(const List<Object> &theList)
+void List<Object>::printList()
 {
-    if (theList.isEmpty())
-        cout << "Empty List " << endl;
+    if (isEmpty())
+        std::cout << "Empty List " << std::endl;
     else
     {
-        ListItr<Object> itr = theList.first();
+        ListItr<Object> itr = first();
         for (; !itr.isPastEnd(); itr.advance())
-            itr.retrieve()->print();
+            itr.retrieve().print();
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 template <class Object>
 void List<Object>::makeEmpty()
 {
     while (!isEmpty())
-        remove(first().retrieve());
+        remove(first());
 }
 
 template <class Object>
@@ -177,4 +150,3 @@ List<Object>::~List()
 }
 
 template class List<BTree<Fileinfo<int>>>;
-template class List<Huffman>;

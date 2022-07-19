@@ -4,9 +4,7 @@
 #include "listitr.h"
 #include "btree.h"
 #include "huffman.h"
-#include <iostream>
-using namespace std;
-#include <string>
+
 template <class Object>
 class List
 {
@@ -19,14 +17,12 @@ public:
     ListItr<Object> first() const;
     ListItr<Object> last() const;
     const int size() const;
-    void insert(Object *x, const ListItr<Object> &p);
-    ListItr<Object> find(Object *x) const;
-    ListItr<Object> findPrevious(Object *x) const;
+    void inset(Object &x, const ListItr<Object> &p);
+
     ListItr<Object> findMin() const;
     bool findSymbol(const char &ch) const;
-    void remove(Object *x);
     void remove(const ListItr<Object> &p);
-    void printList(const List<Object> &theList);
+    void printList();
     void makeEmpty();
 
     const List &operator=(const List &rhs);
