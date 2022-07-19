@@ -7,10 +7,10 @@ BEGIN
         MENUITEM "Close", ID_FILE_CLOSE
         MENUITEM "&Exit\tCtrl+Q", ID_FILE_EXIT
     END
-    POPUP "&Command"
+    POPUP "Co&mmand"
     BEGIN
-        MENUITEM "&Huffman encoding\tCtrl+H", ID_HUFFMAN
-        MENUITEM "Ca&nonize Huffman\tCtrl+N", ID_CANONIZE
+        MENUITEM "&Compress File\tCtrl+C", IDC_BTNCMP
+        MENUITEM "&Decompress file\tCtrl+D", IDC_BTNDCP
     END
     POPUP "&Stuff"
     BEGIN
@@ -21,3 +21,12 @@ BEGIN
 END
 
 IDI_MY_ICON ICON "icon.ico"
+
+IDR_MENU_ACC ACCELERATORS
+BEGIN
+   "^O", ID_FILE_OPEN, ASCII, NOINVERT
+   "^Q", ID_FILE_EXIT, ASCII, NOINVERT
+   "^C", IDC_BTNCMP, ASCII, NOINVERT
+   "^D", IDC_BTNDCP, ASCII, NOINVERT
+   "^H", ID_HELP, ASCII, NOINVERT
+END

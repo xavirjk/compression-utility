@@ -3,12 +3,13 @@
 #define FFS_HH 100
 #include "mainwindow.h"
 #include <shobjidl.h>
-#include "string.h"
 #include <mbstring.h>
 
 LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     LOGFONT lf;
+    RECT rcCl;
+    GetClientRect(m_hwnd, &rcCl);
     switch (uMsg)
     {
     case WM_DESTROY:
@@ -16,17 +17,33 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         return 0;
     case WM_CREATE:
     {
+        r_view = HOME;
+        PostMessage(m_hwnd, WM_DRAW_MAIN, 0, 0);
+    }
+
+        return 0;
+    case WM_DRAW_MAIN:
+    {
         HFONT hFont;
         GetObject(GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
         hFstrong = CreateFont(19, lf.lfWidth, lf.lfEscapement, lf.lfOrientation, 600, lf.lfItalic, lf.lfUnderline,
                               lf.lfStrikeOut, lf.lfCharSet, lf.lfOutPrecision, lf.lfClipPrecision, lf.lfQuality, lf.lfPitchAndFamily, "Times NewRoman");
-        CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, 550, 20, 10, 400, m_hwnd, (HMENU)IDC_SEP, GetModuleHandle(NULL), NULL);
-        HWND fText1 = CreateWindow("STATIC", "File Open", WS_VISIBLE | WS_CHILD | SS_RIGHT, 580, 40, 80, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+        CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_OWNERDRAW, rcCl.right - 230, rcCl.top + 20, 10, rcCl.bottom - 50, m_hwnd, (HMENU)IDC_SEP, GetModuleHandle(NULL), NULL);
+        HWND fText1 = CreateWindow("STATIC", "File Open", WS_VISIBLE | WS_CHILD | SS_RIGHT, rcCl.right - 200, 40, 100, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
         SendMessage(fText1, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
-        HWND fText2 = CreateWindow("STATIC", "CTRL + O", WS_VISIBLE | WS_CHILD | SS_LEFT, 670, 40, 100, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+        HWND fText2 = CreateWindow("STATIC", "CTRL + O", WS_VISIBLE | WS_CHILD | SS_LEFT, rcCl.right - 90, 40, 100, 30, m_hwnd, (HMENU)IDC_TXT1, GetModuleHandle(NULL), NULL);
         SendMessage(fText2, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
     }
         return 0;
+    case WM_TIMER:
+    {
+        if (wParam == IDC_STATUS_TIMER)
+            PostMessage(m_hwnd, WO_KILL_STATUS, 0, 0);
+        else
+            SendMessage(hProgress, PBM_STEPIT, 0, 0);
+        break;
+    }
+
     case WM_DRAWITEM:
     {
         LPDRAWITEMSTRUCT lpDIS = (LPDRAWITEMSTRUCT)lParam;
@@ -40,6 +57,21 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             DrawText(lpDIS->hDC, "Start Compression", -1, &lpDIS->rcItem, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
             return TRUE;
         }
+        else if (wParam == IDC_BTNDCP)
+        {
+            SetDCBrushColor(lpDIS->hDC, RGB(130, 130, 130));
+            RoundRect(lpDIS->hDC, lpDIS->rcItem.left, lpDIS->rcItem.top, lpDIS->rcItem.right, lpDIS->rcItem.bottom, 5, 5);
+            DrawText(lpDIS->hDC, "Decompress File", -1, &lpDIS->rcItem, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+            return TRUE;
+        }
+        else if (wParam == IDC_STATUSBAR)
+        {
+            SetTextColor(lpDIS->hDC, RGB(55, 153, 55));
+            SetDCBrushColor(lpDIS->hDC, RGB(240, 177, 95));
+            RoundRect(lpDIS->hDC, lpDIS->rcItem.left, lpDIS->rcItem.top, lpDIS->rcItem.right, lpDIS->rcItem.bottom, 5, 5);
+            DrawText(lpDIS->hDC, root->statusMessage, -1, &lpDIS->rcItem, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+            return TRUE;
+        }
         else if (wParam == IDC_SEP)
         {
             SetDCBrushColor(lpDIS->hDC, RGB(50, 50, 50));
@@ -48,13 +80,25 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
+    case WM_DRAW_STATUSBAR:
+    {
+        statusBar = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | BS_OWNERDRAW, rcCl.left + 30, rcCl.bottom - 90, rcCl.right - 300, 20, m_hwnd, (HMENU)IDC_STATUSBAR, GetModuleHandle(NULL), NULL);
+        SendMessage(statusBar, WM_SETFONT, WPARAM(hFstrong), TRUE);
+        SetTimer(m_hwnd, IDC_STATUS_TIMER, 2000, NULL);
+        break;
+    }
     case WM_SIZE:
     {
         HWND hEdit;
-        RECT rcClient;
-        GetClientRect(m_hwnd, &rcClient);
-        SetWindowPos(GetDlgItem(m_hwnd, IDC_MAIN_EDIT), NULL, 0, 0, rcClient.right, rcClient.bottom, SWP_NOZORDER);
-        SetWindowPos(GetDlgItem(m_hwnd, IDC_GRPBUTTONS), NULL, 10, 10, rcClient.right - 300, rcClient.top + 100, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_SEP), NULL, rcCl.right - 230, rcCl.top + 20, 10, rcCl.bottom - 50, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_TXT0), NULL, rcCl.right - 200, 40, 100, 30, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_TXT1), NULL, rcCl.right - 90, 40, 100, 30, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_TXT2), NULL, rcCl.right - 200, 80, 100, 30, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_TXT3), NULL, rcCl.right - 90, 80, 100, 30, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_TXT4), NULL, rcCl.right - 200, 120, 100, 30, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_TXT5), NULL, rcCl.right - 90, 120, 100, 30, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_PROGRESS), NULL, rcCl.left + 30, rcCl.bottom - 50, rcCl.right - 300, 20, SWP_NOZORDER);
+        SetWindowPos(GetDlgItem(m_hwnd, IDC_STATUSBAR), NULL, rcCl.left + 30, rcCl.bottom - 90, rcCl.right - 300, 20, SWP_NOZORDER);
     }
         return 0;
     case WM_CTLCOLORSTATIC:
@@ -62,7 +106,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         HDC hdc = (HDC)wParam;
         bool tt = wParam == 505;
         SetTextColor(hdc, RGB(0, 0, 0));
-        SetBkMode(hdc, OPAQUE);
+        SetBkMode(hdc, TRANSPARENT);
         return (INT_PTR)GetStockObject(HOLLOW_BRUSH);
     }
     break;
@@ -74,46 +118,61 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         EndPaint(m_hwnd, &ps);
     }
         return 0;
+    case WO_KILL_PR:
+    {
+        KillTimer(m_hwnd, IDC_TIMER);
+        DestroyWindow(hProgress);
+        operation_in_progress = false;
+        PostMessage(m_hwnd, WM_DRAW_STATUSBAR, 0, 0);
+        break;
+    }
+    case WO_KILL_STATUS:
+    {
+        KillTimer(m_hwnd, IDC_STATUS_TIMER);
+        DestroyWindow(statusBar);
+        break;
+    }
     case WM_COMMAND:
         switch (LOWORD(wParam))
         {
         case FFS_HH:
         {
+            r_view = OPR;
+            EnumChildWindows(m_hwnd, DestroyChild, 0);
+            PostMessage(m_hwnd, WM_DRAW_MAIN, 0, 0);
+            root = new CMPDCP(nstring);
             HFONT hFont;
+
             GetObject(GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
-            hFont = CreateFont(16, lf.lfWidth, lf.lfEscapement, lf.lfOrientation, lf.lfWeight, lf.lfItalic, lf.lfUnderline,
+            hFont = CreateFont(17, lf.lfWidth, lf.lfEscapement, lf.lfOrientation, 500, lf.lfItalic, lf.lfUnderline,
                                lf.lfStrikeOut, lf.lfCharSet, lf.lfOutPrecision, lf.lfClipPrecision, lf.lfQuality, lf.lfPitchAndFamily, "Times NewRoman");
             ShowWindow(GetDlgItem(m_hwnd, IDC_MAIN_EDIT), SW_HIDE);
-            HWND hGrpButton;
-
-            hGrpButton = CreateWindowEx(WS_EX_WINDOWEDGE, "BUTTON", "Select Process Mode:", WS_VISIBLE | WS_CHILD | WS_EX_TRANSPARENT | BS_GROUPBOX, 10, 10, 500, 100, m_hwnd, (HMENU)IDC_GRPBUTTONS, GetModuleHandle(NULL), NULL);
-            SendMessage(hGrpButton, WM_SETFONT, WPARAM(hFont), TRUE);
-            HWND rb1 = CreateWindowEx(WS_EX_WINDOWEDGE, "BUTTON", "Huffman encoding", WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON | WS_GROUP, 30, 50, 200, 20, m_hwnd, (HMENU)IDC_CHK1, GetModuleHandle(NULL), NULL);
-            SendMessage(rb1, WM_SETFONT, WPARAM(hFont), TRUE);
-            HWND rb2 = CreateWindowEx(WS_EX_WINDOWEDGE, "BUTTON", "Canonize Huffman", WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON, 250, 50, 200, 20, m_hwnd, (HMENU)IDC_CHK2, GetModuleHandle(NULL), NULL);
-            SendMessage(rb2, WM_SETFONT, WPARAM(hFont), TRUE);
-            HWND fText = CreateWindow("STATIC", nstring, WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 150, 500, 30, m_hwnd, (HMENU)IDC_FLTXT, GetModuleHandle(NULL), NULL);
+            HWND fText = CreateWindow("STATIC", nstring, WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 40, 500, 30, m_hwnd, (HMENU)IDC_FLTXT, GetModuleHandle(NULL), NULL);
             SendMessage(fText, WM_SETFONT, WPARAM(hFont), MAKELPARAM(FALSE, 0));
-            HWND ft = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | BS_OWNERDRAW, 10, 200, 150, 40, m_hwnd, (HMENU)IDC_BTNCMP, GetModuleHandle(NULL), NULL);
+            HWND ft = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | BS_OWNERDRAW, 10, 100, 150, 40, m_hwnd, (HMENU)IDC_BTNCMP, GetModuleHandle(NULL), NULL);
             SendMessage(ft, WM_SETFONT, WPARAM(hFont), TRUE);
-            HWND fText1 = CreateWindow("STATIC", "Huffman", WS_VISIBLE | WS_CHILD | SS_RIGHT, 580, 80, 80, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+            HWND fText1 = CreateWindow("STATIC", "Compress", WS_VISIBLE | WS_CHILD | SS_RIGHT, rcCl.right - 200, 80, 100, 30, m_hwnd, (HMENU)IDC_TXT2, GetModuleHandle(NULL), NULL);
             SendMessage(fText1, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
-            HWND fText2 = CreateWindow("STATIC", "CTRL + H", WS_VISIBLE | WS_CHILD | SS_LEFT, 670, 80, 100, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
+            HWND fText2 = CreateWindow("STATIC", "CTRL + C", WS_VISIBLE | WS_CHILD | SS_LEFT, rcCl.right - 90, 80, 100, 30, m_hwnd, (HMENU)IDC_TXT3, GetModuleHandle(NULL), NULL);
             SendMessage(fText2, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
-            HWND fText3 = CreateWindow("STATIC", "Canonize", WS_VISIBLE | WS_CHILD | SS_RIGHT, 580, 120, 80, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
-            SendMessage(fText3, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
-            HWND fText4 = CreateWindow("STATIC", "CTRL + N", WS_VISIBLE | WS_CHILD | SS_LEFT, 670, 120, 100, 30, m_hwnd, (HMENU)IDC_TXT0, GetModuleHandle(NULL), NULL);
-            SendMessage(fText4, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
+            std::string ss = nstring;
+            fl_ext = ss.substr(ss.find_last_of(".") + 1);
+            if (fl_ext == "huf")
+            {
+                HWND Bt2 = CreateWindow("BUTTON", "", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | BS_OWNERDRAW, 300, 100, 150, 40, m_hwnd, (HMENU)IDC_BTNDCP, GetModuleHandle(NULL), NULL);
+                SendMessage(Bt2, WM_SETFONT, WPARAM(hFont), TRUE);
+                HWND fText3 = CreateWindow("STATIC", "Decompress", WS_VISIBLE | WS_CHILD | SS_RIGHT, rcCl.right - 200, 120, 100, 30, m_hwnd, (HMENU)IDC_TXT4, GetModuleHandle(NULL), NULL);
+                SendMessage(fText3, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
+                HWND fText4 = CreateWindow("STATIC", "CTRL + D", WS_VISIBLE | WS_CHILD | SS_LEFT, rcCl.right - 90, 120, 100, 30, m_hwnd, (HMENU)IDC_TXT5, GetModuleHandle(NULL), NULL);
+                SendMessage(fText4, WM_SETFONT, WPARAM(hFstrong), MAKELPARAM(FALSE, 0));
+            }
             break;
         }
         case IDC_BTNCMP:
-            root->compression(canonize);
+            operation();
             break;
-        case IDC_CHK1:
-            canonize = false;
-            break;
-        case IDC_CHK2:
-            canonize = true;
+        case IDC_BTNDCP:
+            operation(false);
             break;
         case ID_FILE_EXIT:
             PostMessage(m_hwnd, WM_CLOSE, 0, 0);
@@ -188,13 +247,8 @@ void MainWindow::openFileDialog()
                         wcstombs_s(&converted, nstring, newSize, pszFilePath, _TRUNCATE);
                         _mbscat_s((unsigned char *)nstring, newSize + strConcatSize, (unsigned char *)strConcat);
                         delete[] nstring;
-                        root = new CMPDCP(nstring);
                         CoTaskMemFree(pszFilePath);
-                        string ss = nstring, ext = ss.substr(ss.find_last_of(".") + 1);
-                        if (ext == "huf" || ext == "cnz")
-                            root->decompression(ext);
-                        else
-                            SendMessage(m_hwnd, WM_COMMAND, (WPARAM)FFS_HH, 0);
+                        SendMessage(m_hwnd, WM_COMMAND, (WPARAM)FFS_HH, 0);
                     }
                     pItem->Release();
                 }
@@ -204,3 +258,37 @@ void MainWindow::openFileDialog()
         CoUninitialize();
     }
 }
+
+void MainWindow::showProgress()
+{
+    RECT rcCl;
+    GetClientRect(m_hwnd, &rcCl);
+    hProgress = CreateWindowEx(0, PROGRESS_CLASS, NULL, WS_CHILD | WS_VISIBLE, rcCl.left + 30, rcCl.bottom - 50, rcCl.right - 300, 20, m_hwnd, (HMENU)IDC_PROGRESS, GetModuleHandle(NULL), NULL);
+    SendMessage(hProgress, PBM_SETRANGE, 0, MAKELPARAM(0, 60000 / 2048));
+    SendMessage(hProgress, PBM_SETSTEP, (WPARAM)1, 0);
+    SetTimer(m_hwnd, IDC_TIMER, 1000, NULL);
+}
+void MainWindow::operation(bool cMode)
+{
+    if (r_view == HOME || (cMode == false && fl_ext != "huf") || operation_in_progress)
+        return;
+    showProgress();
+    DWORD id2;
+    struct Data *tData = (struct Data *)malloc(sizeof(*tData));
+    tData->root = root;
+    tData->hWnd = m_hwnd;
+    tData->cMode = cMode;
+    operation_in_progress = true;
+    CreateThread(0, 0, threadFunc, (LPVOID)tData, 0, &id2);
+}
+DWORD MainWindow::Threadstart(LPVOID Param)
+{
+    struct Data *tData = (struct Data *)Param;
+    if (tData->cMode)
+        tData->root->compression();
+    else
+        tData->root->decompression();
+    PostMessage(tData->hWnd, WO_KILL_PR, 0, 0);
+    return 1;
+}
+//CreateThread(0, 0, threadFunc, (LPVOID)m_hwnd, 0, &id2);

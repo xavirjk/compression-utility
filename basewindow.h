@@ -1,6 +1,5 @@
 #include <windows.h>
 #include "resource.h"
-#include <iostream>
 
 template <class DERIVED_TYPE>
 class BaseWindow
@@ -83,6 +82,6 @@ protected:
     virtual BOOL HandleDialog(UINT uMsg, WPARAM wParam) = 0;
     virtual void openFileDialog() = 0;
 
-    HWND m_hwnd;
+    HWND m_hwnd, hProgress, statusBar;
     HFONT hFstrong;
 };
