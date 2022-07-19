@@ -61,15 +61,7 @@ BinaryNode<Comparable> *BTree<Comparable>::clone(BinaryNode<Comparable> *t) cons
 }
 
 template <class Comparable>
-bool BTree<Comparable>::smp(char st)
-{
-    return root->element.symbol == st;
-}
-template <class Comparable>
-bool BTree<Comparable>::findSymbol(char ch) const
-{
-    return root->element.symbol == ch;
-}
+bool BTree<Comparable>::findSymbol(char ch) const { return root->element.symbol == ch; }
 
 template <class Comparable>
 int BTree<Comparable>::depth()

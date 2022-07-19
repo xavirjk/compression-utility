@@ -3,13 +3,14 @@
 #include <bitset>
 CMPDCP::CMPDCP(const std::string &fn) : path(fn)
 {
-    ls = new List<BTree<Fileinfo<int>>>();
     t = -1;
 }
-CMPDCP::~CMPDCP() { cleanUp(); }
+CMPDCP::~CMPDCP() {}
 void CMPDCP::compression()
 {
+    List<BTree<Fileinfo<int>>> _list = List<BTree<Fileinfo<int>>>();
     readFile(path);
+    _list.ensureEmpty();
     if (fl == "")
     {
         statusMessage = "Err!! Could not proceed Compression, invalid input file";
@@ -18,7 +19,7 @@ void CMPDCP::compression()
 
     for (const char s : fl)
     {
-        if (ls->findSymbol(s))
+        if (_list.findSymbol(s))
             continue;
         int frequency = 0;
         for (char si : fl)
@@ -26,17 +27,16 @@ void CMPDCP::compression()
                 frequency++;
         BTree<Fileinfo<int>> tr = BTree<Fileinfo<int>>();
         tr.insert(Fileinfo<int>(s, frequency));
-        ls->inset(tr, ls->last());
+        _list.insert(tr, _list.last());
     }
-    //ls->printList();
-    createHuffmanTree();
+    createHuffmanTree(_list);
     std::string newPath = path.substr(0, path.find_last_of(".")) + ".huf";
     std::ofstream out(newPath, std::ios::out | std::ios::binary);
     file_extension = path.substr(path.find_last_of("."));
-    writeHead(out);
+    writeHead(out, _list);
     writeBody(out);
     statusMessage = "Finished Compression";
-    cleanUp();
+    _list.makeEmpty();
 }
 void CMPDCP::decompression()
 {
@@ -53,19 +53,19 @@ void CMPDCP::decompression()
     std::ofstream out(filePath, std::ios::out | std::ios::binary);
     readBody(out);
     statusMessage = "Finished Decompression";
-    cleanUp();
+    fl = "";
 }
 
-void CMPDCP::createHuffmanTree()
+void CMPDCP::createHuffmanTree(List<BTree<Fileinfo<int>>> _ls)
 {
-    size = ls->size();
+    size = _ls.size();
     bits = "";
 
-    while (ls->size() > 1)
+    while (_ls.size() > 1)
     {
         BTree<Fileinfo<int>> *nT = new BTree<Fileinfo<int>>();
 
-        ListItr<BTree<Fileinfo<int>>> min = ls->findMin(), min2 = ls->findMin();
+        ListItr<BTree<Fileinfo<int>>> min = _ls.findMin(), min2 = _ls.findMin();
 
         int f = min.retrieve().getFrequency() + min2.retrieve().getFrequency();
 
@@ -82,11 +82,11 @@ void CMPDCP::createHuffmanTree()
             nT->insertLeft(min.retrieve());
         }
 
-        ls->inset(*nT, ls->last());
-        ls->remove(min);
-        ls->remove(min2);
+        _ls.insert(*nT, _ls.last());
+        _ls.remove(min);
+        _ls.remove(min2);
     }
-    hf = ls->last().retrieve().huffman(size);
+    hf = _ls.last().retrieve().huffman(size);
 }
 
 std::string CMPDCP::binary_string(int n)
@@ -103,9 +103,9 @@ std::string CMPDCP::binary_string(int n)
         res += char(binToDec((st.substr(i, 8))));
     return res;
 }
-void CMPDCP::writeHead(std::ofstream &out)
+void CMPDCP::writeHead(std::ofstream &out, List<BTree<Fileinfo<int>>> _ls)
 {
-    std::string _tree = ls->last().retrieve().getTree();
+    std::string _tree = _ls.last().retrieve().getTree();
     std::string encoded_tree_len = binary_string(_tree.size());
     uint8_t tree_len = (uint8_t)encoded_tree_len.size();
     out.write((char *)&tree_len, 1);
@@ -240,11 +240,4 @@ void CMPDCP::readFile(std::string path)
     }
     fl.append(buf, 0, stream.gcount());
     stream.close();
-}
-void CMPDCP::cleanUp()
-{
-    std::cout << "killing" << std::endl;
-    //ls->makeEmpty();
-    ls = new List<BTree<Fileinfo<int>>>();
-    fl = "";
 }

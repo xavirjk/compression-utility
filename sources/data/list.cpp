@@ -7,29 +7,16 @@ List<Object>::List()
 }
 
 template <class Object>
-List<Object>::List(const List<Object> &rhs)
-{
-    header = new ListNode<Object>;
-    *this = rhs;
-}
-
-template <class Object>
-const List<Object> &List<Object>::operator=(const List &rhs)
-{
-    if (this != &rhs)
-    {
-        makeEmpty();
-        ListItr<Object> ritr = rhs.first();
-        ListItr<Object> itr = zeroth();
-        for (; !ritr.isPastEnd(); ritr.advance(), itr.advance())
-            inset(ritr.retrieve(), itr);
-    }
-    return *this;
-}
-template <class Object>
 bool List<Object>::isEmpty() const
 {
     return header->next == nullptr;
+}
+
+template <class Object>
+void List<Object>::ensureEmpty()
+{
+    header->next = nullptr;
+    header->previous = nullptr;
 }
 
 template <class Object>
@@ -94,7 +81,7 @@ bool List<Object>::findSymbol(const char &ch) const
     while (itr != nullptr)
     {
 
-        if (itr->element.smp(ch))
+        if (itr->element.findSymbol(ch))
             return true;
         itr = itr->next;
     }
@@ -113,9 +100,25 @@ void List<Object>::remove(const ListItr<Object> &p)
         delete oldNode;
     }
 }
+template <class Object>
+void List<Object>::clearProcedure(const ListItr<Object> &p)
+{
+    int sz = size();
+    ListItr<Object> pr = p.current->previous;
+    if (pr.current->next != nullptr)
+    {
+        ListNode<Object> *oldNode = pr.current->next;
+        pr.current->next = pr.current->next->next;
+        if (sz == 1)
+            header->next = nullptr;
+        else
+            pr.current->next->previous = pr.current;
+        delete oldNode;
+    }
+}
 
 template <class Object>
-void List<Object>::inset(Object &x, const ListItr<Object> &p)
+void List<Object>::insert(Object &x, const ListItr<Object> &p)
 {
     if (p.current != nullptr)
         p.current->next = new ListNode<Object>(x, p.current->next, p.current);
@@ -139,14 +142,10 @@ template <class Object>
 void List<Object>::makeEmpty()
 {
     while (!isEmpty())
-        remove(first());
+        clearProcedure(first());
 }
 
 template <class Object>
-List<Object>::~List()
-{
-    makeEmpty();
-    delete header;
-}
+List<Object>::~List() {}
 
 template class List<BTree<Fileinfo<int>>>;
