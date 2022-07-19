@@ -12,7 +12,6 @@ public:
     ~CMPDCP();
     void compression();
     void decompression();
-    void cleanUp();
     LPCSTR statusMessage = "";
 
 private:
@@ -20,13 +19,12 @@ private:
     const std::string path;
     int t, size, start;
     std::string fl, bits, file_extension;
-    List<BTree<Fileinfo<int>>> *ls;
     BTree<Fileinfo<int>> *tree;
     Huffman *hf;
 
-    void createHuffmanTree();
+    void createHuffmanTree(List<BTree<Fileinfo<int>>> _ls);
     void canonizeHuffman();
-    void writeHead(std::ofstream &out);
+    void writeHead(std::ofstream &out, List<BTree<Fileinfo<int>>> _ls);
     void writeBody(std::ofstream &out);
     int findChar(char s);
     int binToDec(std::string str);

@@ -12,7 +12,6 @@ public:
     BTree(const BTree &rhs);
     ~BTree();
 
-    bool smp(char st);
     bool findSymbol(char ch) const;
     bool isEmpty() const;
     void print() const;
