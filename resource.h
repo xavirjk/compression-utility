@@ -1,3 +1,4 @@
+#define FFS_HH 100
 #define IDR_MY_MENU 101
 #define IDI_MY_ICON 201
 #define IDD_ABOUT 301
@@ -20,6 +21,7 @@
 #define IDC_STATUSBAR 516
 #define IDC_STATUS_TIMER 517
 #define IDR_MENU_ACC 601
+#define IDI_MY_BMP 102
 
 #define ID_FILE_OPEN 9001
 #define ID_FILE_CLOSE 9002
