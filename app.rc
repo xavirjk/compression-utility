@@ -1,0 +1,32 @@
+#include "resource.h"
+IDR_MY_MENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open\tCtrl+O", ID_FILE_OPEN
+        MENUITEM "Close", ID_FILE_CLOSE
+        MENUITEM "&Exit\tCtrl+Q", ID_FILE_EXIT
+    END
+    POPUP "Co&mmand"
+    BEGIN
+        MENUITEM "&Compress File\tCtrl+C", IDC_BTNCMP
+        MENUITEM "&Decompress file\tCtrl+D", IDC_BTNDCP
+    END
+    POPUP "&Stuff"
+    BEGIN
+        MENUITEM "&Go", ID_STUFF_GO
+        MENUITEM "G&o Somewhere Else", 0, GRAYED
+    END
+    MENUITEM "&Help", ID_HELP
+END
+
+IDI_MY_ICON ICON "icon.ico"
+
+IDR_MENU_ACC ACCELERATORS
+BEGIN
+   "^O", ID_FILE_OPEN, ASCII, NOINVERT
+   "^Q", ID_FILE_EXIT, ASCII, NOINVERT
+   "^C", IDC_BTNCMP, ASCII, NOINVERT
+   "^D", IDC_BTNDCP, ASCII, NOINVERT
+   "^H", ID_HELP, ASCII, NOINVERT
+END
